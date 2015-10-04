@@ -17,10 +17,10 @@ class AddressBook(object):
                 ('First Name', 'Last Name', 'Address', 'City', 'State', 'Zip', 'Phone','Email'),
             ]
 
-            for contact in self.contact_list:
+            for contact in contact_list:
                 writer.writerow(contact.to_csv())
         f.close()
 
     def add_contact(self, contact):
-        self.contact_list.append(contact)
-        self.size += 1
+        contact_list.append(contact)
+        size += 1

@@ -13,11 +13,7 @@ class Contact(object):
 
 
     def to_csv(self):
-        return [self.first_name,self.last_name,self.address,self.city,self.state,self.zip_code,self.phone,self.email]
+        return [first_name,last_name,address,city,state,zip_code,phone,email]
 
     def __str__(self):
-        return self.first_name,self.last_name,self.address,self.city,self.state,self.zip_code,self.phone,self.email
-
-
-    def address_info(self):
-        return [self.address, self.city, self.state, self.zip_code]
+        return first_name + ',' + last_name + ',' + address + ',' + city + ',' + state + ',' + zip_code + ',' + phone + ',' + email
