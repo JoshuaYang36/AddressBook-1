@@ -2,6 +2,8 @@ import csv
 from contact import Contact
 
 class AddressBook(object):
+    MAX_CONTACTS = 100
+
     def __init__(self, name, contact_list):
         self.name = name;
         self.size = 0;
@@ -21,6 +23,13 @@ class AddressBook(object):
                 writer.writerow(contact.to_csv())
         f.close()
 
+    def get_database(self):
+        return self.name + '.db'
+
     def add_contact(self, contact):
         contact_list.append(contact)
         size += 1
+
+    def find_id(self, id):
+        for contact in contact_list:
+            if contact
