@@ -1,26 +1,42 @@
 import csv
+import OpenSQLdb
+from NewSQLdb import Database
 from contact import Contact
 
 class AddressBook(object):
-    def __init__(self, name, contact_list):
-        self.name = name;
-        self.size = 0;
-        self.contact_list = contact_list;
+    MAX_CONTACTS = 1024
 
+    def __init__(self, database='', name='', filepath='', num_contacts=0,has_changed=False):
+        self.database = database
+        self.name = name
+        self.filepath = filepath
+        self.num_contacts = 0
+        self.has_changed = False
+        self.cur;
 
-    def write_to_csv(self,output):
-        #FIXME: need to have addressbook name as filename
-        with open(output, 'wb') as f:
-            writer = csv.writer(f)
-            #Create header rows for contact
-            data = [
-                ('First Name', 'Last Name', 'Address', 'City', 'State', 'Zip', 'Phone','Email'),
-            ]
+    def init_db(self):
+        table = string.maketrans("","")
+        if database is '' and name is '' and filepath is '':
+            self.name = (raw_input("Name your address book: ").replace(" ", "")).translate(table, string.punctuation)
+            self.database = name + ".db"
+            con = sqlite3.connect(database)
 
-            for contact in contact_list:
-                writer.writerow(contact.to_csv())
-        f.close()
+            with con:
+                self.cur = con.cursor()
+                try:
+                	cur.execute("CREATE TABLE Contacts(Last Name, First Name, Address, City, State, Zip Code, Phone, Email)")
+                except OperationalError:
+                	None
+        else:
+            database = "sqlite3 "  + name + ".db"
+            os.system(database)
 
-    def add_contact(self, contact):
-        contact_list.append(contact)
-        size += 1
+    def add(self, contact):
+        num_contacts+=1
+        has_changed = True
+        cur.execute("INSERT INTO " + name + contact.to_dao())
+
+    def delete(self, contact):
+        num_contacts-=1 #TODO: Check that entry is successfully deleted
+        has_changed = True
+        cur.execute("DELETE FROM" + name + contact.to_dao())
