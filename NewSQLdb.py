@@ -1,11 +1,18 @@
 import sqlite3 
 import sys
+import string
 
 from sqlite3 import OperationalError
 
+"""
+Creats new addressbook
+"""
 
-# Create New Addressbook DB
-db_name = raw_input("Name your address book: ") + ".db"
+table = string.maketrans("","")
+
+#Takes user input and removes all spaces and punctuation.
+addressbook = (raw_input("Name your address book: ").replace(" ", "")).translate(table, string.punctuation)
+db_name =  addressbook + ".db"
 
 con = sqlite3.connect(db_name)
 
@@ -17,7 +24,7 @@ with con:
     except OperationalError:
     	None 
 
-
+    #Test inputs for DB
     cur.execute("INSERT INTO Contacts VALUES('Yang','Josh', '52642', NULL, NULL, NULL, NULL, NULL)")
     cur.execute("INSERT INTO Contacts VALUES('Yanfg','Joosh', '526422', NULL, NULL, NULL, NULL, NULL)")
     cur.execute("INSERT INTO Contacts VALUES('Yaneg','Jjosh', '526424', NULL, NULL, NULL, NULL, NULL)")
@@ -27,4 +34,3 @@ with con:
     cur.execute("INSERT INTO Contacts VALUES('Yaang','Joosh', '5265642', NULL, NULL, NULL, NULL, NULL)")
     cur.execute("INSERT INTO Contacts VALUES('Yyang','Jossh', '5264742', NULL, NULL, NULL, NULL, NULL)")
 
-    cur.execute("SELECT * FROM Contacts")
