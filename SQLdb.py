@@ -17,9 +17,9 @@ class SQLdb:
 		be used to differentiate between different addressbooks 
 		"""
 
-		#Initializing SQL DB
 		path = os.getcwd() + "/Addressbook.db"
-		
+
+		#Checks if SQL DB exists.... If not, initialize it. 
 		if not os.path.isfile(path):
 			con = sqlite3.connect("AddressBook")
 
@@ -45,7 +45,7 @@ class SQLdb:
 
 			elif action == "open":
 				w = False
-				addressbook = raw_input("Addressbook name to open: ").replace(" ", "").translate(table, string.punctuation).lower()
+				addressbook = raw_input("Addressbook to open: ").replace(" ", "").translate(table, string.punctuation).lower()
 				self.AccessSQLdb(cur, addressbook)
 
 			else:
@@ -54,11 +54,9 @@ class SQLdb:
 
 	def AccessSQLdb(self, cur, addressbook):
 		""" 
-		Prompts the user to choose from one of the following Addressbook actions: Add, Delete, Rerieve, Edit
+		Prompts the user to choose from one of the following Addressbook actions: Add, Delete, Retrieve, Edit
 		"""
-
 	
-			
 		#Test inputs for DB
 		"""
 		#cur.execute("INSERT INTO Contacts VALUES('Yang','Josh', '52642', NULL, NULL, NULL, NULL, NULL, addressbook)")
@@ -99,7 +97,7 @@ class SQLdb:
 	def add(self, cur, addressbook):
 		"""
 		Initiates a Null filled contact list and prompts users to fill out the fields, with a requirement of
-		filling out at least one of the First/Last names, plus one other field
+		filling out at least one of the First/Last names, plus one other field.
 		"""
 
 		contact = [Null, Null, Null, Null, Null, Null, Null, Null, addressbook]
@@ -119,7 +117,7 @@ class SQLdb:
 		#Checks to see if either first or last name has been filled out. Or both. 
 		iterate = True
 		while iterate:
-			if contact[0] == Null and contact[1] == Null:
+			if contact[0] == "" and contact[1] == "":
 				print("Must fill out at least one of the name entries (First/Last)")
 				contact[0] = raw_input("Last Name: ")
 				contact[1] = raw_input("First Name: ")
@@ -129,7 +127,7 @@ class SQLdb:
 		#Checks to see if at least one other field is filled in.
 		entries = 0
 		for item in contact:
-			if item != Null:
+			if item != "":
 				entries += 1
 
 		#If not one other field is filled, will repeatedly prompt user to do so
