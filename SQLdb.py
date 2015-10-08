@@ -59,7 +59,7 @@ class SQLdb:
 
 	
 			
-			#Test inputs for DB
+		#Test inputs for DB
 		"""
 		#cur.execute("INSERT INTO Contacts VALUES('Yang','Josh', '52642', NULL, NULL, NULL, NULL, NULL, addressbook)")
 		#cur.execute("INSERT INTO Contacts VALUES('Yanfg','Joosh', '526422', NULL, NULL, NULL, NULL, NULL, addressbook)")
@@ -71,7 +71,7 @@ class SQLdb:
 		#cur.execute("INSERT INTO Contacts VALUES('Yyang','Jossh', '5264742', NULL, NULL, NULL, NULL, NULL, addressbook)")
 		"""
 
-			# Checks to see if user input is valid. If so, do selected action
+		# Checks to see if user input is valid. If so, do selected action
 		iterate = True
 		while iterate:
 			action = raw_input("What would you like to do? Choose one (Add/Delete/Retrieve/Edit): ").replace(" ", "").translate(table, string.punctuation).lower()
