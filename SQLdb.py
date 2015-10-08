@@ -3,6 +3,7 @@ import sys
 import string
 import os
 
+from os.path import isfile
 from sqlite3 import OperationalError
 
 class SQLdb:
@@ -17,9 +18,11 @@ class SQLdb:
 		"""
 
 		#Initializing SQL DB
-		con = sqlite3.connect("AddressBook")
+		path = os.getcwd() + "/Addressbook.db"
+		
+		if not os.path.isfile(path):
+			con = sqlite3.connect("AddressBook")
 
-		with con:
 
 			cur = con.cursor()    
 			try:
@@ -57,36 +60,36 @@ class SQLdb:
 	
 			
 			#Test inputs for DB
-			"""
-			#cur.execute("INSERT INTO Contacts VALUES('Yang','Josh', '52642', NULL, NULL, NULL, NULL, NULL, addressbook)")
-			#cur.execute("INSERT INTO Contacts VALUES('Yanfg','Joosh', '526422', NULL, NULL, NULL, NULL, NULL, addressbook)")
-			#cur.execute("INSERT INTO Contacts VALUES('Yaneg','Jjosh', '526424', NULL, NULL, NULL, NULL, NULL, addressbook)")
-			#cur.execute("INSERT INTO Contacts VALUES('Yangg','Jossh', '526442', NULL, NULL, NULL, NULL, NULL, addressbook)")
-			#cur.execute("INSERT INTO Contacts VALUES('Yanag','Joshhh', '522642', NULL, NULL, NULL, NULL, NULL, addressbook)")
-			#cur.execute("INSERT INTO Contacts VALUES('Yanag','Joshh', '526442', NULL, NULL, NULL, NULL, NULL, addressbook)")
-			#cur.execute("INSERT INTO Contacts VALUES('Yaang','Joosh', '5265642', NULL, NULL, NULL, NULL, NULL, addressbook)")
-			#cur.execute("INSERT INTO Contacts VALUES('Yyang','Jossh', '5264742', NULL, NULL, NULL, NULL, NULL, addressbook)")
-			"""
+		"""
+		#cur.execute("INSERT INTO Contacts VALUES('Yang','Josh', '52642', NULL, NULL, NULL, NULL, NULL, addressbook)")
+		#cur.execute("INSERT INTO Contacts VALUES('Yanfg','Joosh', '526422', NULL, NULL, NULL, NULL, NULL, addressbook)")
+		#cur.execute("INSERT INTO Contacts VALUES('Yaneg','Jjosh', '526424', NULL, NULL, NULL, NULL, NULL, addressbook)")
+		#cur.execute("INSERT INTO Contacts VALUES('Yangg','Jossh', '526442', NULL, NULL, NULL, NULL, NULL, addressbook)")
+		#cur.execute("INSERT INTO Contacts VALUES('Yanag','Joshhh', '522642', NULL, NULL, NULL, NULL, NULL, addressbook)")
+		#cur.execute("INSERT INTO Contacts VALUES('Yanag','Joshh', '526442', NULL, NULL, NULL, NULL, NULL, addressbook)")
+		#cur.execute("INSERT INTO Contacts VALUES('Yaang','Joosh', '5265642', NULL, NULL, NULL, NULL, NULL, addressbook)")
+		#cur.execute("INSERT INTO Contacts VALUES('Yyang','Jossh', '5264742', NULL, NULL, NULL, NULL, NULL, addressbook)")
+		"""
 
 			# Checks to see if user input is valid. If so, do selected action
-			iterate = True
-			while iterate:
-				action = raw_input("What would you like to do? Choose one (Add/Delete/Retrieve/Edit): ").replace(" ", "").translate(table, string.punctuation).lower()
+		iterate = True
+		while iterate:
+			action = raw_input("What would you like to do? Choose one (Add/Delete/Retrieve/Edit): ").replace(" ", "").translate(table, string.punctuation).lower()
 
-				if action == "add":
-					iterate = False
-					self.add(cur, addressbook)
-				elif action == "delete":
-					iterate = False
-					self.delete(cur, addressbook)
-				elif action == "retrieve":
-					iterate = False
-					self.retrieve(cur, addressbook):
-				elif action == "edit":
-					iterate = False
-					self.edit(cur, addressbook)
-				else:
-					print("Invalid input. Please type one -> (Add/Delete/Retrieve/Edit)")
+			if action == "add":
+				iterate = False
+				self.add(cur, addressbook)
+			elif action == "delete":
+				iterate = False
+				self.delete(cur, addressbook)
+			elif action == "retrieve":
+				iterate = False
+				self.retrieve(cur, addressbook)
+			elif action == "edit":
+				iterate = False
+				self.edit(cur, addressbook)
+			else:
+				print("Invalid input. Please type one -> (Add/Delete/Retrieve/Edit)")
 
 	
 
@@ -134,7 +137,7 @@ class SQLdb:
 		while iterate:		
 			if entries >= 3:
 				iterate = False
-				cur.execute(INSERT INTO Contacts VALUES(last, first, address, city, state, zip_code, phone, email, addressbook))
+				cur.execute("INSERT INTO Contacts VALUES(last, first, address, city, state, zip_code, phone, email, addressbook)")
 			else:
 				print("Must fill out at least one of the following fields.")
 				contact[2] = raw_input("Street Address: ")
