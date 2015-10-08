@@ -11,7 +11,12 @@ class SQLdb:
 	Edit, Search
 	"""
 	def __init__(self):
+		"""
+		Initiatizes the SQL DB that will hold a table called "Contacts". This table will include a field called "AB", which will
+		be used to differentiate between different addressbooks 
+		"""
 
+		#Initializing SQL DB
 		con = sqlite3.connect("AddressBook")
 
 		with con:
@@ -22,12 +27,14 @@ class SQLdb:
 			except OperationalError:
 				None 
 
+		
+		# Prompts user to choose between creating a new addressbook or opening an existing one. Checks to see if user input is correct. 
 		table = string.maketrans("","")
-
 		w = True
 		while w: 
 			action = raw_input("Would you like to create a new addressbook or open an existing one? Choose one (New/Open): ").replace(" ", "").translate(table, string.punctuation).lower()
 			
+			# If and elif statement differs only in the prompt it outputs to the user. Both call AccessSQLdb()
 			if  action == "new":
 				w= False
 				addressbook = (raw_input("Name your address book: ").replace(" ", "")).translate(table, string.punctuation).lower()
@@ -50,6 +57,7 @@ class SQLdb:
 	
 			
 			#Test inputs for DB
+			"""
 			#cur.execute("INSERT INTO Contacts VALUES('Yang','Josh', '52642', NULL, NULL, NULL, NULL, NULL, addressbook)")
 			#cur.execute("INSERT INTO Contacts VALUES('Yanfg','Joosh', '526422', NULL, NULL, NULL, NULL, NULL, addressbook)")
 			#cur.execute("INSERT INTO Contacts VALUES('Yaneg','Jjosh', '526424', NULL, NULL, NULL, NULL, NULL, addressbook)")
@@ -58,8 +66,9 @@ class SQLdb:
 			#cur.execute("INSERT INTO Contacts VALUES('Yanag','Joshh', '526442', NULL, NULL, NULL, NULL, NULL, addressbook)")
 			#cur.execute("INSERT INTO Contacts VALUES('Yaang','Joosh', '5265642', NULL, NULL, NULL, NULL, NULL, addressbook)")
 			#cur.execute("INSERT INTO Contacts VALUES('Yyang','Jossh', '5264742', NULL, NULL, NULL, NULL, NULL, addressbook)")
-			
+			"""
 
+			# Checks to see if user input is valid. If so, do selected action
 			iterate = True
 			while iterate:
 				action = raw_input("What would you like to do? Choose one (Add/Delete/Retrieve/Edit): ").replace(" ", "").translate(table, string.punctuation).lower()
@@ -92,6 +101,7 @@ class SQLdb:
 
 		contact = [Null, Null, Null, Null, Null, Null, Null, Null, addressbook]
 
+		#Prompts user to fill contact list with manual inputs
 		print("Fill out the following contact fields. Press Enter to skip. Must fill out at least First/Last Name AND one other field.")
 		
 		contact[0] = raw_input("Last Name: ")
