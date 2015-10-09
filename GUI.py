@@ -26,8 +26,15 @@ class Application(Frame):
 		self.e.pack()
 		self.e.delete(0, END)
 		self.e.insert(0, "a default value")
-		self.e.pack({"side": "left"})
-		self.e.place(x=160, y=35) 
+		self.e.pack({"side": "top"})
+		#self.e.place(x=160, y=35) 
+		
+		self.e2 = Entry(self)
+		self.e2.pack()
+		self.e2.delete(0, END)
+		self.e2.insert(0, "a default value")
+		self.e2.pack({"side": "bottom"})
+		
 		# end of textbox
 		
 		#Bottons
