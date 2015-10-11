@@ -18,7 +18,7 @@ class Application(Frame):
 		
 	def display_address(self, b, array):
 		# List view
-		listbox = Listbox(self)
+		listbox = Listbox(self, width=45)
 		listbox.grid(row=1,column=0)
 		listbox.insert(END, "a list entry")
 		listbox.bind("<Double-Button-1>", self.OnDouble)
@@ -62,7 +62,7 @@ class Application(Frame):
 		self.city.delete(0, END)
 		self.city.insert(0, "City")
 		
-		self.state = Entry(self, width=2)
+		self.state = Entry(self, width=5)
 		self.state.grid(row=8,column=1)
 		self.state.delete(0, END)
 		self.state.insert(0, "State")
@@ -92,6 +92,23 @@ class Application(Frame):
 		
 	def __init__(self, master=None):
 		Frame.__init__(self, master)
+		#
+		self.menubar = Menu(self)
+		menu = Menu(self.menubar, tearoff=0)
+		self.menubar.add_cascade(label="File", menu=menu)
+		menu.add_command(label="New")
+		menu = Menu(self.menubar, tearoff=0)
+		self.menubar.add_cascade(label="Edit", menu=menu)
+		menu.add_command(label="Copy")
+		
+		try:
+			self.master.config(menu=self.menubar)
+		except AttributeError:
+			# master is a toplevel window (Python 1.4/Tkinter 1.63)
+			self.master.tk.call(master, "config", "-menu", self.menubar)
+			
+		self.canvas = Canvas(self, bg="white", width=400, height=400, bd=0, highlightthickness=0)
+		#
 		self.grid()
 		self.createWidgets()
 		
