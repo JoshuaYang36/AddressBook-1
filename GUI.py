@@ -23,17 +23,20 @@ class Application(Frame):
 		
 		# Textbox entry 
 		self.e = Entry(self)
-		self.e.pack()
+		#self.e.grid(row=0,column=0)
+		#self.e.pack()
 		self.e.delete(0, END)
 		self.e.insert(0, "a default value")
 		self.e.pack({"side": "top"})
-		#self.e.place(x=160, y=35) 
+		#self.e.place(x=160, y=35, width=120, height=25) 
+		#self.e.grid(row=0,column=0)
 		
 		self.e2 = Entry(self)
 		self.e2.pack()
 		self.e2.delete(0, END)
 		self.e2.insert(0, "a default value")
 		self.e2.pack({"side": "bottom"})
+		
 		
 		# end of textbox
 		
