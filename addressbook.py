@@ -1,42 +1,58 @@
 import csv
-import OpenSQLdb
-from NewSQLdb import Database
+import sqlite3
 from contact import Contact
 
 class AddressBook(object):
     MAX_CONTACTS = 1024
+    db_name = 'addressbook.db'
 
-    def __init__(self, database='', name='', filepath='', num_contacts=0,has_changed=False):
-        self.database = database
+    def __init__(self, name,num_contacts=0):
         self.name = name
-        self.filepath = filepath
-        self.num_contacts = 0
+        self.num_contacts= 0
         self.has_changed = False
-        self.cur;
-
-    def init_db(self):
-        table = string.maketrans("","")
-        if database is '' and name is '' and filepath is '':
-            self.name = (raw_input("Name your address book: ").replace(" ", "")).translate(table, string.punctuation)
-            self.database = name + ".db"
-            con = sqlite3.connect(database)
-
-            with con:
-                self.cur = con.cursor()
-                try:
-                	cur.execute("CREATE TABLE Contacts(Last Name, First Name, Address, City, State, Zip Code, Phone, Email)")
-                except OperationalError:
-                	None
-        else:
-            database = "sqlite3 "  + name + ".db"
-            os.system(database)
 
     def add(self, contact):
-        num_contacts+=1
-        has_changed = True
-        cur.execute("INSERT INTO " + name + contact.to_dao())
+        self.num_contacts+=1
+        self.has_changed = True
+
+        conn = sqlite3.connect('addressbook.db')
+        c = conn.cursor()
+        c.execute("""
+        insert into contacts (lname,fname,address,city,state,zcode,phone,email)
+        values (?,?,?,?,?,?,?,?)
+        """,(contact.last_name,contact.first_name,contact.address,contact.city,contact.state,contact.zip_code,contact.phone,contact.email,))
+        conn.commit()
 
     def delete(self, contact):
         num_contacts-=1 #TODO: Check that entry is successfully deleted
         has_changed = True
-        cur.execute("DELETE FROM" + name + contact.to_dao())
+
+        conn = sqlite3.connect('addressbook.db')
+        c = conn.cursor()
+        c.execute("""
+        delete from contacts (lname,fname,address,city,state,zcode,phone,email)
+        values (?,?,?,?,?,?,?,?)
+        """,(contact.last_name,contact.first_name,contact.address,contact.city,contact.state,contact.zip_code,contact.phone,contact.email,))
+        conn.commit()
+
+    def retrieve(self, lname, fname):
+        conn = sqlite3.connect('addressbook.db')
+        c = conn.cursor()
+        c.execute("""
+        select * from contacts where lname like ?
+        and fname like ?""",(lname,fname,))
+
+        print c.fetchall()
+        result = c.fetchall()
+        conn.close()
+        return result
+
+    def display(self):
+        conn = sqlite3.connect('addressbook.db')
+        c = conn.cursor()
+        c.execute("""
+        select * from contacts
+        """)
+        for row in c:
+            print(row)
+        conn.close()
