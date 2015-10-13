@@ -21,16 +21,16 @@ class Contact(object):
             self.email = list[7]
 
     def __str__(self):
-        return first_name + ',' + last_name + ',' + address + ',' + city + ',' + state + ',' + zip_code + ',' + phone + ',' + email
+        return self.first_name + ',' + self.last_name + ',' + self.address + ',' + self.city + ',' + self.state + ',' + self.zip_code + ',' + self.phone + ',' + self.email
 
     def __hash__(self):
-        return self.hash(first_name,last_name,zip_code)
+        return self.hash(self.first_name,self.last_name,self.zip_code)
 
     def to_dao(self):
         return "VALUES("+self.__str__()+")"
 
     def to_tsv(self):
-        return first_name + '\t' + last_name + '\t' + address + '\t' + city + '\t' + state + '\t' + zip_code + '\t' + phone + '\t' + email + '\n'
+        return self.first_name + '\t' + self.last_name + '\t' + self.address + '\t' + self.city + '\t' + self.state + '\t' + self.zip_code + '\t' + self.phone + '\t' + self.email + '\n'
 
 class FieldError(Exception):
     def __init__(self,value):
