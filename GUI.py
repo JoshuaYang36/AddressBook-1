@@ -45,7 +45,7 @@ class Application(Frame):
 		self.search.delete(0, END)
 		self.search.insert(0, "Search tool")
 		 
-		self.fname = Entry(self, width=10)
+		self.fname = Entry(self, width=15)
 		self.fname.grid(row=5,sticky=W)
 		self.fname.delete(0, END)
 		self.fname.insert(0, "First name")
@@ -120,11 +120,12 @@ class Application(Frame):
 		#
 		self.grid()
 		self.createWidgets()
-		
-root = Tk()
-root.geometry("400x400")
 
-#root.resizable(width=FALSE, height=FALSE) # this for the window to be unrealizable  
-app = Application(master=root)
-app.mainloop()
-root.destroy()
+if __name__ == "__main__":
+	root = Tk()
+	root.geometry("400x355")
+	#root.resizable(width=FALSE, height=FALSE) # this for the window to be unrealizable  
+	app = Application(master=root)
+	app.mainloop()
+	root.destroy()
+	
