@@ -17,6 +17,12 @@ class Application(Frame):
 	
 	def searc(self):
 		print "Function, search had happen to DB"
+	
+	def update(self):
+		print "Function, update had happen to DB"
+	
+	def erase(self):
+		print "Function, erase had happen to all feilds"
 		
 	def OnDouble(self, event):
 		widget = event.widget
@@ -79,6 +85,16 @@ class Application(Frame):
 		self.zip.grid(row=8,column=2)
 		self.zip.delete(0, END)
 		self.zip.insert(0, "Zip")
+		
+		self.email = Entry(self, width=18)
+		self.email.grid(row=9,column=0, sticky=W)
+		self.email.delete(0, END)
+		self.email.insert(0, "Email address")
+		
+		self.phone = Entry(self, width=13)
+		self.phone.grid(row=10,column=0, sticky=W)
+		self.phone.delete(0, END)
+		self.phone.insert(0, "Phone number")
 		# end of textbox
 		
 		#Bottons
@@ -91,12 +107,22 @@ class Application(Frame):
 		self.add_b["text"] = "Add",
 		#self.add_b["command"] = self.add(self, fname.get(), lname.get(), address.get(), address2.get(), city.get(), state.get(), zip.get())
 		self.add_b["command"] = self.add
-		self.add_b.grid(row=13,column=0)
+		self.add_b.grid(row=10,column=2, sticky=W)
 		
 		self.delete_b = Button(self)
 		self.delete_b["text"] = "Delete",
 		self.delete_b["command"] = self.delete
 		self.delete_b.grid(row=13,column=1, sticky=W)
+		
+		self.update_b = Button(self)
+		self.update_b["text"] = "Update",
+		self.update_b["command"] = self.update
+		self.update_b.grid(row=13,column=2, sticky=W)
+		
+		self.erase_b = Button(self)
+		self.erase_b["text"] = "Erase",
+		self.erase_b["command"] = self.erase
+		self.erase_b.grid(row=10,column=1, sticky=W)
 		# end of bottons
 		
 	def __init__(self, master=None):
@@ -123,7 +149,7 @@ class Application(Frame):
 
 if __name__ == "__main__":
 	root = Tk()
-	root.geometry("400x355")
+	root.geometry("430x400")
 	#root.resizable(width=FALSE, height=FALSE) # this for the window to be unrealizable  
 	app = Application(master=root)
 	app.mainloop()
