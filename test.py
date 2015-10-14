@@ -1,5 +1,7 @@
 from peewee import *
-from process_data import *
+from fileUtils import *
+
+#PY2EXE
 
 DATABASE = 'application.db'
 db = SqliteDatabase(DATABASE)
@@ -27,7 +29,6 @@ class Contact(BaseModel):
 
     class Meta:
         order_by = ('last_name',)
-        primary_key = CompositeKey('last_name','first_name')
 
 def create_tables():
     db.connect()
@@ -99,6 +100,9 @@ def string_search(info, ab):
         ))
     for result in results:
         print_info(result)
+
+def delete_contact(contact):
+    contact.delete_instance()
 
 def print_info(contact):
     print contact.first_name+" "+contact.last_name+" "+contact.address+" "+contact.city+" "+contact.state+" "+contact.zip_code+" "+contact.phone+" "+contact.email
