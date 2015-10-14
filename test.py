@@ -1,5 +1,6 @@
 from peewee import *
 from fileUtils import *
+from playhouse.csv_loader import dump_csv
 from contact import ContactDAO
 
 # Instantiate SqliteDatabase object that models will use to persist data.
@@ -157,18 +158,27 @@ def populate_addressbook(id,csv_file=None):
             Contact.create(**data_dict)
     print "Created contacts in book with id " + str(id)
 
+
+def export_addressbook(id,out_file):
+    with open(out_file, 'w') as f:
+        query = Contact.select().where(Contact.ab == id).order_by(Contact.last_name)
+        dump_csv(query, f)
+
+
 if __name__ == "__main__":
-    BOOK = 'Book01'
+    BOOK1 = 'Book01'
+    BOOK2 = 'Book02'
     DATA_FILE = 'dataOct-13-2015.csv'
+    MOCK_DATA = [{ "first_name": "Dorothy", "last_name": "Bennett", "address": "620 Everett Crossing", "city": "Staten Island", "state": "NY", "zip_code": "62756-543", "phone": "1-(914)285-4062", "email": "dbennett0@zdnet.com" }, { "first_name": "Alice", "last_name": "Dunn", "address": "99 Saint Paul Center", "city": "Portland", "state": "OR", "zip_code": "24598-0121", "phone": "1-(971)898-2830", "email": "adunn1@webs.com" }, { "first_name": "Willie", "last_name": "Wilson", "address": "8 Walton Center", "city": "Long Beach", "state": "CA", "zip_code": "51655-111", "phone": "1-(562)553-1798", "email": "wwilson2@fotki.com" }, { "first_name": "Jason", "last_name": "Olson", "address": "300 Eagan Avenue", "city": "Albany", "state": "NY", "zip_code": "55319-110", "phone": "1-(518)773-8518", "email": "jolson3@csmonitor.com" }, { "first_name": "Kevin", "last_name": "Moore", "address": "57553 Laurel Plaza", "city": "El Paso", "state": "TX", "zip_code": "54868-5021", "phone": "1-(915)623-2962", "email": "kmoore4@loc.gov" }]
 
     create_tables()
-    addressbook = create_addressbook(BOOK)
+    addressbook = create_addressbook(BOOK1)
 
     # Fill addressbook with data in DATA_FILE
     print "Populating addressbook..."
     populate_addressbook(addressbook.id, DATA_FILE)
 
-    num_contacts = Contact.select().count()
+    num_contacts = Contact.select().where(Contact.ab == addressbook.id).count()
     print addressbook.name+" now has "+str(num_contacts)+" contacts!"
 
     person1 = ContactDAO(['Smith','Hannah','992 E 18th','eugene','oregon','97403','5039367858','hus@uoregon.edu'])
@@ -189,3 +199,17 @@ if __name__ == "__main__":
         Contact.get(Contact.id == person1_id)
     except DoesNotExist:
         print "Deletion successful!"
+
+    print "Creating second addressbook..."
+    addressbook2 = create_addressbook(BOOK2)
+
+    with db.atomic():
+        for data in MOCK_DATA:
+            data.update({'ab':addressbook2.id})
+            Contact.create(**data)
+
+    num_contacts = Contact.select().where(Contact.id == addressbook2.id).count()
+    print addressbook2.name+" now has "+str(num_contacts)+" contacts!"
+
+    print "Exporting addressbook..."
+    export_addressbook(addressbook2.id, 'test.csv')
