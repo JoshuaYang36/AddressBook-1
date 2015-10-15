@@ -1,6 +1,6 @@
 import string
 import os
-import pickle
+from peewee import *
 from addressbook import AddressBook
 from contact import Contact
 
@@ -8,6 +8,7 @@ from contact import Contact
 #     __init__(self, first_name, last_name, ):
 #         self.first_name
 #         se
+
 
 def add_contact():
     addressbook_name = get_address_book()

@@ -1,10 +1,11 @@
 import csv
 import sqlite3
 from contact import Contact
+from test import *
 
 class AddressBook(object):
     MAX_CONTACTS = 1024
-    db_name = 'addressbook.db'
+
 
     def __init__(self, name,num_contacts=0):
         self.name = name

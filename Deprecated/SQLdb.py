@@ -27,6 +27,8 @@ class SQLdb:
 			action = raw_input("Would you like to create a new addressbook or open an existing one? Choose one (New/Open): ").replace(" ", "").translate(table, string.punctuation).lower()
 
 			# If and elif statement differs only in the prompt it outputs to the user. Both call AccessSQLdb()
+			# A new address book is created in the AddressBook table of the database.
+			# The table autoincrements the id when a new AddressBook is created
 			if  action == "new":
 				w = False
 				addressbook = (raw_input("Name your address book: ").replace(" ", "")).translate(table, string.punctuation).lower()

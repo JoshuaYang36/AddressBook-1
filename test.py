@@ -52,7 +52,7 @@ def create_tables():
     and Contact models. Only needs to be performed once at the initialization
     of the app. """
     db.connect()
-    db.drop_tables([AddressBook, Contact])
+    # db.drop_tables([AddressBook, Contact])
     db.create_tables([AddressBook, Contact],True)
 
 # first_name =
@@ -70,14 +70,16 @@ def create_addressbook(name):
     with the name provided, the database will raise an IntegrityError.
     :param name: string, the name of the Addressbook
     """
-    try:
+    q = AddressBook.select().where(AddressBook.name == name)
+    if q.exists():
+        addressbook = AddressBook.get(AddressBook.name == name)
+    else:
         with db.transaction():
             addressbook = AddressBook.create(
                 name=name,
             )
-        return addressbook
-    except IntegrityError:
-        print 'Addressbook already exists'
+
+    return addressbook
 
 
 def create_contact(contact, ab):
@@ -180,7 +182,9 @@ if __name__ == "__main__":
     DATA_FILE = 'dataOct-13-2015.csv'
     MOCK_DATA = [{ "first_name": "Dorothy", "last_name": "Bennett", "address": "620 Everett Crossing", "city": "Staten Island", "state": "NY", "zip_code": "62756-543", "phone": "1-(914)285-4062", "email": "dbennett0@zdnet.com" }, { "first_name": "Alice", "last_name": "Dunn", "address": "99 Saint Paul Center", "city": "Portland", "state": "OR", "zip_code": "24598-0121", "phone": "1-(971)898-2830", "email": "adunn1@webs.com" }, { "first_name": "Willie", "last_name": "Wilson", "address": "8 Walton Center", "city": "Long Beach", "state": "CA", "zip_code": "51655-111", "phone": "1-(562)553-1798", "email": "wwilson2@fotki.com" }, { "first_name": "Jason", "last_name": "Olson", "address": "300 Eagan Avenue", "city": "Albany", "state": "NY", "zip_code": "55319-110", "phone": "1-(518)773-8518", "email": "jolson3@csmonitor.com" }, { "first_name": "Kevin", "last_name": "Moore", "address": "57553 Laurel Plaza", "city": "El Paso", "state": "TX", "zip_code": "54868-5021", "phone": "1-(915)623-2962", "email": "kmoore4@loc.gov" }]
 
+
     create_tables()
+
     addressbook = create_addressbook(BOOK1)
 
     # Fill addressbook with data in DATA_FILE
