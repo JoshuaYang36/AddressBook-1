@@ -143,6 +143,9 @@ def delete_contact(contact):
 
 
 def print_info(contact):
+    """ Prints a Contact.
+    :param contact: Contact, the contact to print.
+    """
     print contact.first_name + " " + contact.last_name + " " + contact.address + " " + contact.city + " " + contact.state + " " + contact.zip_code + " " + contact.phone + " " + contact.email
 
 
@@ -160,9 +163,15 @@ def populate_addressbook(id,csv_file=None):
 
 
 def export_addressbook(id,out_file):
+    """ Exports Contacts to a file in csv format.
+    :param id: int, the id of the AddressBook to export.
+    :param out_file: string, the file to export data to.
+    """
+
     with open(out_file, 'w') as f:
+        writer = csv.writer(f, delimiter='\t')
         query = Contact.select().where(Contact.ab == id).order_by(Contact.last_name)
-        dump_csv(query, f)
+        dump_csv(query, f, csv_writer=writer)
 
 
 if __name__ == "__main__":
@@ -181,7 +190,7 @@ if __name__ == "__main__":
     num_contacts = Contact.select().where(Contact.ab == addressbook.id).count()
     print addressbook.name+" now has "+str(num_contacts)+" contacts!"
 
-    person1 = ContactDAO(['Smith','Hannah','992 E 18th','eugene','oregon','97403','5039367858','hus@uoregon.edu'])
+    person1 = ContactDAO(['Smith','Hannah','992 E 18th','eugene','oregon','97403','5339369958','hus@uoregon.edu'])
     print "Inserting "+person1.first_name+" "+person1.last_name+" into "+addressbook.name
     person1_id = create_contact(person1, addressbook.id)
 
