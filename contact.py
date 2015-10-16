@@ -1,3 +1,15 @@
+
+
+
+"""
+Test address book application
+
+Author: Hannah Smith
+Contributors in alphabetic order by last name:
+        Abdulmajeed Kadi, Max Kohl, Garrett Morrison, Joshua Yang
+"""
+
+
 import csv
 
 #Contact(['Hannah','Smith','98 e nowhere','eugene','oregon','97212','5555555555','hus@uoregon.edu'])

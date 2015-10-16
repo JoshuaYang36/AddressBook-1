@@ -1,3 +1,15 @@
+
+
+
+"""
+Address Book Graphical User interface
+
+Author: Abdulmajeed Kadi
+Contributors in alphabetic order by last name:
+        Max Kohl, Garrett Morrison, Hannah Smith, Joshua Yang
+"""
+
+
 from Tkinter import *
 
 class Application(Frame):

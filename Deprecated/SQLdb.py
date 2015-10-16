@@ -1,3 +1,15 @@
+
+
+
+"""
+SQLite3 Database Class
+
+Author: Joshua Yang
+Contributors in alphabetic order by last name:
+        Abdulmajeed Kadi, Max Kohl, Garrett Morrison, Hannah Smith
+"""
+
+
 import sqlite3
 import sys
 import string

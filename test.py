@@ -1,3 +1,15 @@
+
+
+
+"""
+Test address book application
+
+Author: Hannah Smith
+Contributors in alphabetic order by last name:
+        Abdulmajeed Kadi, Max Kohl, Garrett Morrison, Joshua Yang
+"""
+
+
 from peewee import *
 from fileUtils import *
 from playhouse.csv_loader import dump_csv

@@ -1,7 +1,18 @@
+
+
+
+"""
+Address Book Unit Test Program
+
+Author: Max Kohl
+Contributors in alphabetic order by last name:
+        Abdulmajeed Kadi, Garrett Morrison, Hannah Smith, Joshua Yang
+"""
+
+
 import time
 import subprocess
 import glob
-#garrett , hannah , josh , majeed , max
 successes = []
 warnings = []
 errors = []
@@ -17,10 +28,9 @@ for fi in files:
     lines = f.readlines()
     for line in lines:
         line = line.lower()
-        if "#" in line:
-            for name in na:
-                if name in line and name in names_array:
-                    names_array.remove(name)
+        for name in na:
+            if name in line and name in names_array:
+                names_array.remove(name)
     if len(names_array) == 0:
         successes.append("Academic Integrity SUCCESS: " + str(fi))
     else:

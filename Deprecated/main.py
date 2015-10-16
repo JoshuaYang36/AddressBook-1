@@ -1,3 +1,15 @@
+
+
+
+"""
+Test address book application
+
+Author: Hannah Smith
+Contributors in alphabetic order by last name:
+        Abdulmajeed Kadi, Max Kohl, Garrett Morrison, Joshua Yang
+"""
+
+
 import string
 import os
 from peewee import *

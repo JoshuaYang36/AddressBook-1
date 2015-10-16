@@ -1,3 +1,15 @@
+
+
+
+"""
+Address Book Class
+
+Author: Hannah Smith
+Contributors in alphabetic order by last name:
+        Abdulmajeed Kadi, Max Kohl, Garrett Morrison, Joshua Yang
+"""
+
+
 import csv
 import sqlite3
 from contact import Contact

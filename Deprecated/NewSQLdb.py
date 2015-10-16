@@ -1,3 +1,15 @@
+
+
+
+"""
+Test SQLite3 Database
+
+Author: Joshua Yang
+Contributors in alphabetic order by last name:
+        Abdulmajeed Kadi, Max Kohl, Garrett Morrison, Hannah Smith
+"""
+
+
 import sqlite3 
 import sys
 import string
@@ -5,7 +17,7 @@ import string
 from sqlite3 import OperationalError
 
 """
-Creats new addressbook
+Creates new addressbook
 """
 
 table = string.maketrans("","")
