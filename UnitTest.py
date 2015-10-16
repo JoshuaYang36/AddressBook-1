@@ -56,31 +56,13 @@ if (succeed and elapsed_time < time_threshold):
 elif (elapsed_time >= time_threshold):
     errors.append("Import FAIL: contact.py time limit exceeded: " + str(elapsed_time))
 
-#Contact module
-succeed = False
-start_time = time.clock()
-try:
-    out = subprocess.check_output(['python',"addressbook.py"])
-    if len(out) == 0:
-        succeed = True
-    import addressbook
-except subprocess.CalledProcessError as e:
-    errors.append("Import FAIL: addressbook.py "+str(e))
-
-end_time = time.clock()
-elapsed_time = end_time - start_time
-if (succeed and elapsed_time < time_threshold):
-    successes.append("Import SUCCESS: addressbook.py")
-elif (elapsed_time >= time_threshold):
-    errors.append("Import FAIL: addressbook.py time limit exceeded: " + str(elapsed_time))
-
 
 print("Beginning contact instantiation")
 #Contact class
 succeed = False
 start_time = time.clock()
 try:
-    person = contact.Contact(['Hannah','Smith','98 e nowhere','eugene','oregon','97212','5555555555','hus@uoregon.edu'])
+    person = contact.ContactDAO(['Hannah','Smith','98 e nowhere','eugene','oregon','97212','5555555555','hus@uoregon.edu'])
     succeed = True
 except:
     errors.append("Instance Creation FAIL: Contact")
@@ -98,9 +80,9 @@ output = False
 expected_output = 39278464
 start_time = time.clock()
 try:
-    id = id(person)
+    contact_id = id(person)
     succeed = True
-    output = type(id) == long
+    output = type(contact_id) == int
 except:
     errors.append("Method Test FAIL: id(contact)")
 end_time = time.clock()
@@ -108,7 +90,7 @@ elapsed_time = end_time - start_time
 if (output == True and succeed and elapsed_time < time_threshold):
     successes.append("Method Test SUCCESS: id(contact)")
 elif (output == False):
-    errors.append("Method Test FAIL: id(contact) produces bad output. Expected: "+ str(expected_output)+ " and got: " + str(id))
+    errors.append("Method Test FAIL: id(contact) produces bad output. Expected: "+ str(type(int))+ " and got: " + str(type(contact_id)))
 elif (elapsed_time >= time_threshold):
     errors.append("Instance FAIL: id(ontact) time limit exceeded: " + str(elapsed_time))
 
@@ -116,7 +98,7 @@ elif (elapsed_time >= time_threshold):
 #Contact class
 succeed = False
 output = False
-expected_output = 'Hannah,Smith,98 e nowhere,eugene,oregon,97212,5555555555,hus@uoregon.edu'
+expected_output = 'Smith,Hannah,98 e nowhere,eugene,oregon,97212,5555555555,hus@uoregon.edu'
 start_time = time.clock()
 try:
     id = str(person)
@@ -133,21 +115,6 @@ elif (output == False):
 elif (elapsed_time >= time_threshold):
     errors.append("Instance FAIL: str(contact) time limit exceeded: " + str(elapsed_time))
 
-print("Beginning address book instantiation")
-#Address Book class
-succeed = False
-start_time = time.clock()
-try:
-    book = addressbook.AddressBook("Cats")
-    succeed = True
-except:
-    errors.append("Instance Creation FAIL: AddressBook")
-end_time = time.clock()
-elapsed_time = end_time - start_time
-if (succeed and elapsed_time < time_threshold):
-    successes.append("Instance SUCCESS: AddressBook")
-elif (elapsed_time >= time_threshold):
-    errors.append("Instance FAIL: AddressBook time limit exceeded: " + str(elapsed_time))
 
 
 print("\nUnit Test Complete. Results:")
