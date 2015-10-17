@@ -73,7 +73,7 @@ if (succeed and elapsed_time < time_threshold):
 elif (elapsed_time >= time_threshold):
     errors.append("Instance FAIL: Contact time limit exceeded: " + str(elapsed_time))
 
-print("Beginning contact method testing")
+print("Beginning ContactDAO method testing")
 #Contact class
 succeed = False
 output = False
@@ -92,7 +92,7 @@ if (output == True and succeed and elapsed_time < time_threshold):
 elif (output == False):
     errors.append("Method Test FAIL: id(contact) produces bad output. Expected: "+ str(type(int))+ " and got: " + str(type(contact_id)))
 elif (elapsed_time >= time_threshold):
-    errors.append("Instance FAIL: id(ontact) time limit exceeded: " + str(elapsed_time))
+    errors.append("Instance FAIL: id(contact) time limit exceeded: " + str(elapsed_time))
 
 
 #Contact class

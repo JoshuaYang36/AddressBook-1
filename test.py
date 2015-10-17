@@ -14,6 +14,8 @@ from peewee import *
 from fileUtils import *
 from playhouse.csv_loader import dump_csv
 from contact import ContactDAO
+import sys
+
 
 # Instantiate SqliteDatabase object that models will use to persist data.
 DATABASE = 'application.db'
@@ -198,8 +200,12 @@ def contact_menu(contact):
         print("CONTACT: " + contact.first_name + " " + contact.last_name)
         print_info(contact)
         ab = contact.ab
-        contact_action = int(raw_input(
-            "Enter option number:\n\t[1] Edit Contact\n\t[2] Delete Contact\n\t[3] Return to main menu\n"))
+        prompt = "Enter option number:\n\t[1] Edit Contact\n\t[2] Delete Contact\n\t[3] Return to main menu\n"
+        #print(           
+        #	"Enter option number:\n\t[1] Edit Contact\n\t[2] Delete Contact\n\t[3] Return to main menu\n")
+        contact_action = get_user_input_as_int(prompt)
+        #contact_action = int(raw_input(
+        #    "Enter option number:\n\t[1] Edit Contact\n\t[2] Delete Contact\n\t[3] Return to main menu\n"))
 
         if contact_action == 1:
             pass
@@ -219,28 +225,47 @@ def book_menu(addressbook):
     keep_running = True
 
     while keep_running:
-        book_action = int(raw_input(
-            "Enter option number:\n\t[1] Add contact\n\t[2] Retrieve contact\n\t[3] Import address book\n\t[4] Export address book\n\t[5] Main Menu\n"))
+    	prompt = "Enter option number:\n\t[1] Add contact\n\t[2] Retrieve contact\n\t[3] Import address book\n\t[4] Export address book\n\t[5] Main Menu\n"
+        book_action = get_user_input_as_int(prompt)
+        #book_action = int(raw_input(
+        #    "Enter option number:\n\t[1] Add contact\n\t[2] Retrieve contact\n\t[3] Import address book\n\t[4] Export address book\n\t[5] Main Menu\n"))
 
         if book_action == 1:
             contact = [None] * 8
             print("Fill out the following contact fields. Press Enter to skip. Must fill out at least First/Last Name AND one other field.")
 
-            contact[0] = raw_input("Last Name: ")
-            contact[1] = raw_input("First Name: ")
-            contact[2] = raw_input("Street Address: ")
-            contact[3] = raw_input("City: ")
-            contact[4] = raw_input("State: ")
-            contact[5] = raw_input("Zip Code: ")
-            contact[6] = raw_input("Phone: ")
-            contact[7] = raw_input("Email: ")
+            prompt = "Last Name: "
+            contact[0] = get_user_input_as_string(prompt)
+            prompt = "First Name: "
+            contact[1] = get_user_input_as_string(prompt)
+            prompt = "Street Address: "
+            contact[2] = get_user_input_as_string(prompt)
+            prompt = "City: "
+            contact[3] = get_user_input_as_string(prompt)
+            prompt = "State: "
+            contact[4] = get_user_input_as_string(prompt)
+            prompt = "Zip Code: "
+            contact[5] = get_user_input_as_string(prompt)
+            prompt = "Phone: "
+            contact[6] = get_user_input_as_string(prompt)
+            prompt = "Email: "
+            contact[7] = get_user_input_as_string(prompt)
+            #contact[0] = raw_input("Last Name: ")
+            #contact[1] = raw_input("First Name: ")
+            #contact[2] = raw_input("Street Address: ")
+            #contact[3] = raw_input("City: ")
+            #contact[4] = raw_input("State: ")
+            #contact[5] = raw_input("Zip Code: ")
+            #contact[6] = raw_input("Phone: ")
+            #contact[7] = raw_input("Email: ")
 
             new_contact = ContactDAO(contact)
             create_contact(new_contact, addressbook.id)
             print("Contact created!")
 
         elif book_action == 2:
-            SEARCH_NAME = raw_input("Enter first or last name of contact: ")
+            prompt = "Enter first or last name of contact: "
+            SEARCH_NAME = get_user_input_as_string(prompt)
             FOUND_CONTACT = search_contacts(SEARCH_NAME, addressbook.id)
 
             if FOUND_CONTACT is not None:
@@ -248,11 +273,15 @@ def book_menu(addressbook):
                 contact_menu(FOUND_CONTACT)
 
         elif book_action == 3:
-            IN_FILE = raw_input("Enter file name to import: ")
+            prompt = "Enter file name to import: "
+            IN_FILE = get_user_input_as_string(prompt)
+            #IN_FILE = raw_input("Enter file name to import: ")
             populate_addressbook(IN_FILE, addressbook.id)
 
         elif book_action == 4:
-            OUT_FILE = raw_input("Enter file to export to: ")
+            prompt = "Enter file to export to: "
+            OUT_FILE = get_user_input_as_string(prompt)
+            #OUT_FILE = raw_input("Enter file to export to: ")
             export_addressbook(OUT_FILE, addressbook.id)
 
         elif book_action == 5:
@@ -260,6 +289,49 @@ def book_menu(addressbook):
 
         else:
             print("Invalid input")
+
+
+def get_user_input_as_int(prompt):
+	"""
+	Fix for bug #1, this flushes stdout before processing input.
+	"""
+	valid_input = False
+	while not valid_input:
+		"""
+		The next three lines of uncommented code are derived from Jonathan Gardner's code example: 
+		https://mail.python.org/pipermail/python-bugs-list/2002-March/010726.html
+		"""
+		print(prompt)
+		sys.stdout.flush()
+		user_input = int(sys.stdin.readline())
+		if type(user_input) == None:
+			print("Invalid input, please enter an integer.")
+		elif type(user_input) == int:
+			valid_input = True
+	return user_input
+
+
+def get_user_input_as_string(prompt):
+	"""
+	Fix for bug #1, this flushes stdout before processing input.
+	"""
+	valid_input = False
+	while not valid_input:
+		"""
+		The next three lines of uncommented code are derived from Jonathan Gardner's code example: 
+		https://mail.python.org/pipermail/python-bugs-list/2002-March/010726.html
+		"""
+		print(prompt)
+		sys.stdout.flush()
+		user_input = sys.stdin.readline()
+		if type(user_input) == None:
+			print("Invalid input, please enter an integer.")
+		elif type(user_input) == str:
+			valid_input = True
+	return user_input
+
+
+
 
 
 def main():
@@ -274,13 +346,16 @@ def main():
 
     while keep_running:
         print("ADDRESSBOOK APPLICATION\n")
-        home_action = int(raw_input(
-            "Enter option number:\n\t[1] Create Address Book\n\t[2] Open Address Book\n\t[3] Exit\n"))
+        prompt = "Enter option number:\n\t[1] Create Address Book\n\t[2] Open Address Book\n\t[3] Exit\n"
+        home_action = get_user_input_as_int(prompt)
+        #home_action = int(raw_input(
+        #    "Enter option number:\n\t[1] Create Address Book\n\t[2] Open Address Book\n\t[3] Exit\n"))
 
         if home_action == 1 or home_action == 2:
-            BOOK_NAME = raw_input("Enter name of Address Book: ")
-            addressbook = create_addressbook(BOOK_NAME)
-            book_menu(addressbook)
+        	prompt = "Enter name of Address Book: "
+        	BOOK_NAME = get_user_input_as_string(prompt)
+        	addressbook = create_addressbook(BOOK_NAME)
+        	book_menu(addressbook)
         elif home_action == 3:
             keep_running = False
         else:
