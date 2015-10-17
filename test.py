@@ -115,7 +115,7 @@ def create_contact(contact, ab):
                 ab=ab
             )
         # print person.save() # Prints 1 if successful
-        print_info(person)
+        #print_info(person)
         return person.id  # Return id of Contact
     except IntegrityError:
         print 'Contact already exists'
