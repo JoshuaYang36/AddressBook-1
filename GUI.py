@@ -1,39 +1,60 @@
-
-
-
 """
 Address Book Graphical User interface
-
 Author: Abdulmajeed Kadi
 Contributors in alphabetic order by last name:
         Max Kohl, Garrett Morrison, Hannah Smith, Joshua Yang
 """
-
+import contact
 
 from Tkinter import *
+from tkMessageBox import *
 
 class Application(Frame):
+	def retrieve_input(self):
+
+		contact =[None]*9
+		contact[0] = self.lname.get()
+		contact[1] = self.fname.get()
+		contact[2] = self.address.get()
+		contact[3] = self.city.get()
+		contact[4] = self.state.get()
+		contact[5] = self.zip.get()
+		contact[6] = self.phone.get()
+		contact[7] = self.email.get()
+
+		return contact
+
 	def add(self):
-		print "Function, addition had happen to DB"
-	"""def add(self, fname, lname, ad1, ad2, city, state, zip):
-		print fname
-		print lname
-		print ad1
-		print ad2
-		print city
-		print state
-		print zip"""
+		contact = self.retrieve_input()
+		contact[8] = "add"
+
 		
 	def delete(self):
-		print "Function, deletion had happen to DB"
+		if askyesno('Verify', 'Are you sure you want to delete?'):
+			contact = self.retrieve_input()
+			contact[8] = "add" 
+			for i in contact:
+				print(i)
+   		else:
+			showinfo('No', 'Delete has been cancelled')
+		
 	
-	def searc(self):
+	def search(self):
 		print "Function, search had happen to DB"
 	
 	def update(self):
 		print "Function, update had happen to DB"
 	
 	def erase(self):
+		self.fname.delete(0, END)
+		self.lname.delete(0, END)
+		self.address.delete(0, END)
+		self.address2.delete(0, END)
+		self.city.delete(0, END)
+		self.state.delete(0, END)
+		self.zip.delete(0, END)
+		self.email.delete(0, END)
+		self.phone.delete(0, END)
 		print "Function, erase had happen to all feilds"
 		
 	def OnDouble(self, event):
@@ -112,12 +133,11 @@ class Application(Frame):
 		#Bottons
 		self.searchB = Button(self)
 		self.searchB["text"] = "Search",
-		self.searchB["command"] = self.searc
+		self.searchB["command"] = self.search
 		self.searchB.grid(row=1,column=1)
 		
 		self.add_b = Button(self)
 		self.add_b["text"] = "Add",
-		#self.add_b["command"] = self.add(self, fname.get(), lname.get(), address.get(), address2.get(), city.get(), state.get(), zip.get())
 		self.add_b["command"] = self.add
 		self.add_b.grid(row=10,column=2, sticky=W)
 		
@@ -132,7 +152,7 @@ class Application(Frame):
 		self.update_b.grid(row=13,column=2, sticky=W)
 		
 		self.erase_b = Button(self)
-		self.erase_b["text"] = "Erase",
+		self.erase_b["text"] = "New",
 		self.erase_b["command"] = self.erase
 		self.erase_b.grid(row=10,column=1, sticky=W)
 		# end of bottons
@@ -166,4 +186,3 @@ if __name__ == "__main__":
 	app = Application(master=root)
 	app.mainloop()
 	root.destroy()
-	
