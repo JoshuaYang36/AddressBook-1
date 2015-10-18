@@ -164,6 +164,8 @@ class Application(Frame):
 		menu = Menu(self.menubar, tearoff=0)
 		self.menubar.add_cascade(label="File", menu=menu)
 		menu.add_command(label="New")
+		menu.add_command(label="Export")
+		menu.add_command(label="Import")
 		menu = Menu(self.menubar, tearoff=0)
 		self.menubar.add_cascade(label="Edit", menu=menu)
 		menu.add_command(label="Copy")
