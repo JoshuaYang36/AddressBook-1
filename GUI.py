@@ -11,6 +11,7 @@ from tkMessageBox import *
 
 class Application(Frame):
 	def retrieve_input(self):
+
 		contact = {"first_name": None, "last_name": None, "address": None, "city": None, "state": None, "zip_code": None, "phone": None, "email": None}
 
 		address = self.address.get() + " " + self.address2.get()
@@ -23,9 +24,6 @@ class Application(Frame):
 		contact["zip_code"] = self.zip.get()
 		contact["phone"] = self.phone.get()
 		contact["email"] = self.email.get()
-		
-		print(contact["first_name"])
-		print(contact["city"])
 
 		return contact
 
@@ -169,6 +167,10 @@ class Application(Frame):
 		menu = Menu(self.menubar, tearoff=0)
 		self.menubar.add_cascade(label="File", menu=menu)
 		menu.add_command(label="New")
+
+		menu.add_command(label="Export")
+		menu.add_command(label="Import")
+
 		menu = Menu(self.menubar, tearoff=0)
 		self.menubar.add_cascade(label="Edit", menu=menu)
 		menu.add_command(label="Copy")
@@ -190,4 +192,7 @@ if __name__ == "__main__":
 	#root.resizable(width=FALSE, height=FALSE) # this for the window to be unrealizable  
 	app = Application(master=root)
 	app.mainloop()
+
 	root.destroy()
+
+
