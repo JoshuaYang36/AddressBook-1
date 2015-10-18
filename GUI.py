@@ -11,16 +11,21 @@ from tkMessageBox import *
 
 class Application(Frame):
 	def retrieve_input(self):
+		contact = {"first_name": None, "last_name": None, "address": None, "city": None, "state": None, "zip_code": None, "phone": None, "email": None}
 
-		contact =[None]*9
-		contact[0] = self.lname.get()
-		contact[1] = self.fname.get()
-		contact[2] = self.address.get()
-		contact[3] = self.city.get()
-		contact[4] = self.state.get()
-		contact[5] = self.zip.get()
-		contact[6] = self.phone.get()
-		contact[7] = self.email.get()
+		address = self.address.get() + " " + self.address2.get()
+		
+		contact["first_name"] = self.fname.get()
+		contact["last_name"] = self.lname.get()
+		contact["address"] = address
+		contact["city"] = self.city.get()
+		contact["state"] = self.state.get()
+		contact["zip_code"] = self.zip.get()
+		contact["phone"] = self.phone.get()
+		contact["email"] = self.email.get()
+		
+		print(contact["first_name"])
+		print(contact["city"])
 
 		return contact
 
