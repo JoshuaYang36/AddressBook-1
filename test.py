@@ -102,18 +102,9 @@ def create_contact(contact, ab):
     :param ab: int, the id of the AddressBook the Contact will be added to.
     """
     try:
+        contact.update('ab':ab)
         with db.transaction():
-            person = Contact.create(
-                first_name=contact.first_name,
-                last_name=contact.last_name,
-                address=contact.address,
-                city=contact.city,
-                state=contact.state,
-                zip_code=contact.zip_code,
-                phone=contact.phone,
-                email=contact.email,
-                ab=ab
-            )
+            person = Contact.create(contact)
         # print person.save() # Prints 1 if successful
         #print_info(person)
         return person.id  # Return id of Contact
@@ -141,20 +132,20 @@ def search_contacts(name, ab):
     return result
 
 
-# def string_search(info, ab):
-#     results = Contact.select().where(
-#         (Contact.ab == ab) & (
-#             (Contact.first_name.contains(info)) |
-#             (Contact.last_name.contains(info)) |
-#             (Contact.address.contains(info)) |
-#             (Contact.city.contains(info)) |
-#             (Contact.state.contains(info)) |
-#             (Contact.zip_code.contains(info)) |
-#             (Contact.phone.contains(info)) |
-#             (Contact.email.comtains(info))
-#         ))
-#     for result in results:
-#         print_info(result)
+def string_search(info, ab):
+    results = Contact.select().where(
+        (Contact.ab == ab) & (
+            (Contact.first_name.contains(info)) |
+            (Contact.last_name.contains(info)) |
+            (Contact.address.contains(info)) |
+            (Contact.city.contains(info)) |
+            (Contact.state.contains(info)) |
+            (Contact.zip_code.contains(info)) |
+            (Contact.phone.contains(info)) |
+            (Contact.email.comtains(info))
+        ))
+    for result in results:
+        print_info(result)
 
 
 def delete_contact(contact):
@@ -201,7 +192,7 @@ def contact_menu(contact):
         print_info(contact)
         ab = contact.ab
         prompt = "Enter option number:\n\t[1] Edit Contact\n\t[2] Delete Contact\n\t[3] Return to main menu\n"
-        #print(           
+        #print(
         #	"Enter option number:\n\t[1] Edit Contact\n\t[2] Delete Contact\n\t[3] Return to main menu\n")
         contact_action = get_user_input_as_int(prompt)
         #contact_action = int(raw_input(
@@ -298,7 +289,7 @@ def get_user_input_as_int(prompt):
 	valid_input = False
 	while not valid_input:
 		"""
-		The next three lines of uncommented code are derived from Jonathan Gardner's code example: 
+		The next three lines of uncommented code are derived from Jonathan Gardner's code example:
 		https://mail.python.org/pipermail/python-bugs-list/2002-March/010726.html
 		"""
 		print(prompt)
@@ -318,7 +309,7 @@ def get_user_input_as_string(prompt):
 	valid_input = False
 	while not valid_input:
 		"""
-		The next three lines of uncommented code are derived from Jonathan Gardner's code example: 
+		The next three lines of uncommented code are derived from Jonathan Gardner's code example:
 		https://mail.python.org/pipermail/python-bugs-list/2002-March/010726.html
 		"""
 		print(prompt)
