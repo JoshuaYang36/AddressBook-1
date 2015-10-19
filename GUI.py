@@ -5,7 +5,7 @@ Contributors in alphabetic order by last name:
         Max Kohl, Garrett Morrison, Hannah Smith, Joshua Yang
 """
 import contact
-
+from tkFileDialog import askopenfilename
 from Tkinter import *
 from tkMessageBox import *
 
@@ -33,23 +33,27 @@ class Application(Frame):
 
 	def list_content_update(self):
 		a = ["strings"]
-		# a = updated list from the data base. Each element of the list should be "name tab tab zip"
+		# a = updated list from the data base "updated one". Each element of the list should be "name tab tab zip"
 		self.display_address(self, a)
 		
 	def delete(self):
 		if askyesno('Verify', 'Are you sure you want to delete?'):
 			contact = self.retrieve_input()
 			contact[8] = "add" 
+			self.list_content_update()
 			for i in contact:
 				print(i)
    		else:
-			showinfo('No', 'Delete has been cancelled')
-		
+			showinfo('No', 'Delete has been cancelled')	
 	
 	def search(self):
+		# need implementation
+		# a call to the self.display_address(self, results_of_search)
 		print "Function, search had happen to DB"
 	
 	def update(self):
+		# need implementation
+		self.list_content_update()
 		print "Function, update had happen to DB"
 	
 	def erase(self):
@@ -164,6 +168,17 @@ class Application(Frame):
 		self.erase_b.grid(row=10,column=1, sticky=W)
 		# end of bottons
 		
+	def export(self):
+		print "exported"
+		#this function will call the function that will make the export of the data base
+	
+	def impot(self):
+		# this function will call the function that will make the import to the data base
+		print "imported"
+		imported_contacts = askopenfilename()
+		# now use "imported_contacts" as the file path of the file that you'll parse contact from
+		self.list_content_update() # this call is so that we will get an updated listbox
+	
 	def __init__(self, master=None):
 		Frame.__init__(self, master)
 		#
@@ -172,8 +187,9 @@ class Application(Frame):
 		self.menubar.add_cascade(label="File", menu=menu)
 		menu.add_command(label="New")
 
-		menu.add_command(label="Export")
-		menu.add_command(label="Import")
+		menu.add_command(label="Export", command=self.export)
+		menu.add_command(label="Import", command=self.impot)
+		menu.add_command(label="Quit", command=self.quit)
 
 		menu = Menu(self.menubar, tearoff=0)
 		self.menubar.add_cascade(label="Edit", menu=menu)
