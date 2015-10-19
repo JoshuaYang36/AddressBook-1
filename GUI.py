@@ -11,7 +11,6 @@ from tkMessageBox import *
 
 class Application(Frame):
 	def retrieve_input(self):
-
 		contact = {"first_name": None, "last_name": None, "address": None, "city": None, "state": None, "zip_code": None, "phone": None, "email": None}
 
 		address = self.address.get() + " " + self.address2.get()
@@ -30,7 +29,12 @@ class Application(Frame):
 	def add(self):
 		contact = self.retrieve_input()
 		contact[8] = "add"
+		self.list_content_update()
 
+	def list_content_update(self):
+		a = ["strings"]
+		# a = updated list from the data base. Each element of the list should be "name tab tab zip"
+		self.display_address(self, a)
 		
 	def delete(self):
 		if askyesno('Verify', 'Are you sure you want to delete?'):
@@ -194,5 +198,3 @@ if __name__ == "__main__":
 	app.mainloop()
 
 	root.destroy()
-
-
