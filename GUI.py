@@ -90,6 +90,7 @@ class Application(Frame):
 				listbox.insert(END, list_output)
 		#self.listbox.place(x=1, y=2)
 		# end of list view
+	
 
 	def createWidgets(self):
 		a = ["one", "two", "three", "four"]
