@@ -102,7 +102,7 @@ def create_contact(contact, ab):
     :param ab: int, the id of the AddressBook the Contact will be added to.
     """
     try:
-        contact.update('ab':ab)
+        #contact.update('ab':ab)
         with db.transaction():
             person = Contact.create(contact)
         # print person.save() # Prints 1 if successful

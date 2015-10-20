@@ -44,8 +44,12 @@ class ContactDAO(object):
     def to_tsv(self):
         return self.first_name + '\t' + self.last_name + '\t' + self.address + '\t' + self.city + '\t' + self.state + '\t' + self.zip_code + '\t' + self.phone + '\t' + self.email + '\n'
 
+    def to_listbox_element(self):
+        return self.last_name + "\t\t" + self.zip_code
+
 class FieldError(Exception):
     def __init__(self,value):
         self.value = value
+
     def __str__(self):
         return repr(self.value)

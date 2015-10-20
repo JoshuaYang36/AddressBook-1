@@ -8,6 +8,7 @@ import contact
 from tkFileDialog import askopenfilename
 from Tkinter import *
 from tkMessageBox import *
+import test
 
 class Application(Frame):
 	def retrieve_input(self):
@@ -34,6 +35,7 @@ class Application(Frame):
 	def list_content_update(self):
 		a = ["strings"]
 		# a = updated list from the data base "updated one". Each element of the list should be "name tab tab zip"
+		a = test.string_search("",1)
 		self.display_address(self, a)
 		
 	def delete(self):
@@ -81,7 +83,11 @@ class Application(Frame):
 		listbox.insert(END, "a list entry")
 		listbox.bind("<Double-Button-1>", self.OnDouble)
 		for item in array:
-			listbox.insert(END, item)
+			if type(item) == str:
+				listbox.insert(END, item)
+			else:
+				list_output = item.last_name + "\t\t" + item.zip_code
+				listbox.insert(END, list_output)
 		#self.listbox.place(x=1, y=2)
 		# end of list view
 
@@ -169,7 +175,8 @@ class Application(Frame):
 		# end of bottons
 		
 	def export(self):
-		print "exported"
+		test.export_addressbook("exported_filename.tsv", 1)
+
 		#this function will call the function that will make the export of the data base
 	
 	def impot(self):
@@ -209,8 +216,9 @@ class Application(Frame):
 if __name__ == "__main__":
 	root = Tk()
 	root.geometry("430x400")
+	test.create_tables()
+	BOOK_NAME = "doge"
+	addressbook = test.create_addressbook(BOOK_NAME)
 	#root.resizable(width=FALSE, height=FALSE) # this for the window to be unrealizable  
 	app = Application(master=root)
 	app.mainloop()
-
-	root.destroy()
