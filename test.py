@@ -102,11 +102,12 @@ def create_contact(contact, ab):
     :param ab: int, the id of the AddressBook the Contact will be added to.
     """
     try:
-        #contact.update('ab':ab)
+        print(type(contact))
+        contact.update({'ab':ab})
         with db.transaction():
-            person = Contact.create(contact)
-        # print person.save() # Prints 1 if successful
-        #print_info(person)
+            person = Contact.create(**contact)
+        #print person.save() # Prints 1 if successful
+        print_info(person)
         return person.id  # Return id of Contact
     except IntegrityError:
         print 'Contact already exists'
