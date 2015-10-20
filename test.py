@@ -133,19 +133,29 @@ def search_contacts(name, ab):
 
 
 def string_search(info, ab):
-    results = Contact.select().where(
-        (Contact.ab == ab) & (
-            (Contact.first_name.contains(info)) |
-            (Contact.last_name.contains(info)) |
-            (Contact.address.contains(info)) |
-            (Contact.city.contains(info)) |
-            (Contact.state.contains(info)) |
-            (Contact.zip_code.contains(info)) |
-            (Contact.phone.contains(info)) |
-            (Contact.email.comtains(info))
-        ))
+    """Returns a list of contacts satisfying the search query.
+    :param info: search term, will find this string for any field except ID
+    :param ab: int, id of AddressBook being searched.
+    """
+    info = info.rstrip()
+    if info == "" or info == "Search tool":
+        return Contact.select().where(Contact.ab == ab)
+    else:
+        results = Contact.select().where(
+         (Contact.ab == ab) & (
+             (Contact.first_name.contains(info)) |
+             (Contact.last_name.contains(info)) |
+             (Contact.address.contains(info)) |
+             (Contact.city.contains(info)) |
+             (Contact.state.contains(info)) |
+             (Contact.zip_code.contains(info)) |
+             (Contact.phone.contains(info)) |
+             (Contact.email.contains(info))
+         ))
+    contact_array = []
     for result in results:
-        print_info(result)
+        contact_array.append(ContactDAO([result.first_name,result.last_name,result.address,result.city,result.state,result.zip_code,result.phone,result.email]))
+    return contact_array
 
 
 def delete_contact(contact):
