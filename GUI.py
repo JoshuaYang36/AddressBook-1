@@ -4,10 +4,11 @@ Author: Abdulmajeed Kadi
 Contributors in alphabetic order by last name:
         Max Kohl, Garrett Morrison, Hannah Smith, Joshua Yang
 """
-from tkFileDialog import askopenfilename
+import tkFileDialog
 from Tkinter import *
-from tkMessageBox import *
 from test import *
+import tkSimpleDialog # For Addressbook name
+
 
 
 class Application(Frame):
@@ -41,7 +42,7 @@ class Application(Frame):
         a = ["strings"]
         # a = updated list from the data base "updated one". Each element of the
         # list should be "name tab tab zip"
-        a = test.string_search("", 1) #FIXME: This is not the correct usage of this function
+        a = Contact.select() #FIXME: This is not the correct usage of this function
         self.display_address(self, a)
 
     def delete(self):
@@ -83,7 +84,6 @@ class Application(Frame):
         print "selection:", selection, ": '%s'" % value
 
     def display_address(self, b, array): #FIXME: What is 'b'??
-        # List view
         listbox = Listbox(self, width=25)
         listbox.grid(row=2, column=0)
         listbox.insert(END, "a list entry")
@@ -231,7 +231,7 @@ if __name__ == "__main__":
     root = Tk()
     root.geometry("430x400")
     create_tables()
-    BOOK_NAME = "doge"
+    BOOK_NAME = tkSimpleDialog.askstring("Book name","Enter book name") #Simple dialog gets book name
     addressbook = create_addressbook(BOOK_NAME)
     print("addressbook id: "+ str(addressbook.id))
     # root.resizable(width=FALSE, height=FALSE) # this for the window to be unrealizable
