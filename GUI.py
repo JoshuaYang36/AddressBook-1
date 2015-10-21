@@ -16,8 +16,10 @@ class Application(Frame):
     def retrieve_input(self):
         contact = {"first_name": None, "last_name": None, "address": None,
             "city": None, "state": None, "zip_code": None, "phone": None, "email": None}
-
-        address = self.address.get() + " " + self.address2.get()
+        if self.address.get() == "Address line 2":
+        	address = self.address.get() + " " + self.address2.get()
+        else:
+        	address = self.address.get()
 
         contact["first_name"] = self.fname.get()
         contact["last_name"] = self.lname.get()
@@ -84,32 +86,27 @@ class Application(Frame):
         print "selection:", selection, ": '%s'" % value
 
     def display_address(self, b, array): #FIXME: What is 'b'??
-        listbox = Listbox(self, width=25)
-        listbox.grid(row=2, column=0)
-        listbox.insert(END, "a list entry")
-        listbox.bind("<Double-Button-1>", self.OnDouble)
-        if type(array) == list:
+        if type(array) == dict:
             for item in array:
                 if type(item) == str:
-                    listbox.insert(END, item)
+                    self.listbox.insert(END, item)
                 else:
                     list_output = item.last_name + "\t\t" + item.zip_code
-                    listbox.insert(END, list_output)
+                    self.listbox.insert(END, list_output)
         else:
-            list_output = array.last_name + "\t\t" + array.zip_code
-            listbox.insert(END, list_output)
+            list_output = array.last_name + "\t\t" + array.first_name + "\t\t" + array.address + "\t\t" + array.city + "\t\t" + array.state + "\t\t" + array.zip_code
+            self.listbox.insert(END, list_output)
         # self.listbox.place(x=1, y=2)
         # end of list view
 
     def createWidgets(self):
-        a = ["one", "two", "three", "four"]
-        self.display_address(self, a)
-
+    	all_contact_instances = Contact.select()
+    	print all_contact_instances[0].lname
         # Textbox entry
-        self.search = Entry(self, width=20)
-        self.search.grid(row=1, column=0)
+        self.search = Entry(self, width=40)
+        self.search.grid(row=1, column=0, columnspan=2)
         self.search.delete(0, END)
-        self.search.insert(0, "Search tool")
+        self.search.insert(0, "Search for contact")
 
         self.fname = Entry(self, width=15)
         self.fname.grid(row=5, sticky=W)
@@ -142,7 +139,7 @@ class Application(Frame):
         self.state.insert(0, "State")
 
         self.zip = Entry(self, width=5)
-        self.zip.grid(row=8, column=2)
+        self.zip.grid(row=8, column=2, sticky=W)
         self.zip.delete(0, END)
         self.zip.insert(0, "Zip")
 
@@ -161,28 +158,34 @@ class Application(Frame):
         self.searchB = Button(self)
         self.searchB["text"] = "Search",
         self.searchB["command"] = self.search
-        self.searchB.grid(row=1, column=1)
+        self.searchB.grid(row=1, column=2)
 
         self.add_b = Button(self)
         self.add_b["text"] = "Add",
         self.add_b["command"] = self.add
-        self.add_b.grid(row=10, column=2, sticky=W)
+        self.add_b.grid(row=13, column=1)
 
         self.delete_b = Button(self)
         self.delete_b["text"] = "Delete",
         self.delete_b["command"] = self.delete
-        self.delete_b.grid(row=13, column=1, sticky=W)
+        self.delete_b.grid(row=13, column=2)
 
         self.update_b = Button(self)
         self.update_b["text"] = "Update",
         self.update_b["command"] = self.update
-        self.update_b.grid(row=13, column=2, sticky=W)
+        self.update_b.grid(row=13, column=3, sticky=E)
 
         self.erase_b = Button(self)
         self.erase_b["text"] = "New",
         self.erase_b["command"] = self.erase
-        self.erase_b.grid(row=10, column=1, sticky=W)
+        self.erase_b.grid(row=13, column=0, sticky=E)
         # end of bottons
+
+
+        self.listbox = Listbox(self, width=65)
+        self.listbox.grid(row=2, column=0, columnspan=6)
+        self.listbox.bind("<Double-Button-1>", self.OnDouble)
+
 
     def export(self):
         test.export_addressbook("exported_filename.tsv", 1)
@@ -225,11 +228,12 @@ class Application(Frame):
                              height=400, bd=0, highlightthickness=0)
         #
         self.grid()
+
         self.createWidgets()
 
 if __name__ == "__main__":
     root = Tk()
-    root.geometry("430x400")
+    root.geometry("470x400")
     create_tables()
     BOOK_NAME = tkSimpleDialog.askstring("Book name","Enter book name") #Simple dialog gets book name
     addressbook = create_addressbook(BOOK_NAME)
