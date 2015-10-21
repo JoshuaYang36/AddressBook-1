@@ -138,7 +138,9 @@ def string_search(info, ab):
     :param info: search term, will find this string for any field except ID
     :param ab: int, id of AddressBook being searched.
     """
+  
     info = info.rstrip()
+
     if info == "" or info == "Search tool":
         return Contact.select().where(Contact.ab == ab)
     else:
@@ -151,11 +153,12 @@ def string_search(info, ab):
              (Contact.state.contains(info)) |
              (Contact.zip_code.contains(info)) |
              (Contact.phone.contains(info)) |
-             (Contact.email.contains(info))
-         ))
+             (Contact.email.contains(info))))
+
+
     contact_array = []
     for result in results:
-        contact_array.append(ContactDAO([result.first_name,result.last_name,result.address,result.city,result.state,result.zip_code,result.phone,result.email]))
+        contact_array.append(result)
     return contact_array
 
 

@@ -8,7 +8,7 @@ import tkFileDialog
 from Tkinter import *
 from test import *
 import tkSimpleDialog # For Addressbook name
-
+import tkMessageBox
 
 
 class Application(Frame):
@@ -34,7 +34,7 @@ class Application(Frame):
 
     def add(self):
         contact = self.retrieve_input()
-        person = create_contact(contact, 4) #FIXME: The 4 needs to be replaced by the addressbook.id of the book it belongs to
+        person = create_contact(contact, addressbook.id) #FIXME: The 4 needs to be replaced by the addressbook.id of the book it belongs to
         #contact[8] = "add")
         new_contact = Contact.get(Contact.id == person)
         self.display_address(self,new_contact)
@@ -48,24 +48,51 @@ class Application(Frame):
         self.display_address(self, a)
 
     def delete(self):
-        if askyesno('Verify', 'Are you sure you want to delete?'):
-            contact = self.retrieve_input()
-            contact[8] = "add"
-            self.list_content_update()
-            for i in contact:
-                print(i)
-        else:
-            showinfo('No', 'Delete has been cancelled')
 
-    def search(self):
-        # need implementation
-        # a call to the self.display_address(self, results_of_search)
-        print "Function, search had happen to DB"
+        try:
+            if tkMessageBox.askyesno('Verify', 'Are you sure you want to delete?'):
+                d = Contact.delete().where(Contact.id == self.id_box.get())
+                d.execute()
+                self.populate_listbox()
+
+                self.fname.delete(0, END)
+                self.lname.delete(0, END)
+                self.address.delete(0, END)
+                self.address2.delete(0, END)
+                self.city.delete(0, END)
+                self.state.delete(0, END)
+                self.zip.delete(0, END)
+                self.email.delete(0, END)
+                self.phone.delete(0, END)
+                self.id_box.delete(0, END)
+
+            else:
+                showinfo('No', 'Delete has been cancelled')
+        except ValueError:
+            print "Double click the contact you want to delete, then click delete again!"
+
+
+    def searching(self):
+        contact = self.search.get()
+        contacts = string_search(contact, self.addressbook.id)
+        s = "\t\t"
+        self.create_listbox()
+        for i in contacts:
+            self.listbox.insert(END, str(i.id) + s + i.first_name + s + i.last_name + s + i.address + s + i.city + s + i.state + s + i.zip_code)
 
     def update(self):
-        # need implementation
-        self.list_content_update()
-        print "Function, update had happen to DB"
+        db_id = self.id_box.get()
+
+        try:
+            
+            d = Contact.delete().where(Contact.id == db_id)
+            d.execute()
+
+        except ValueError:
+            print "Double click the contact you want to update, then click update again!"
+        
+        self.add()
+        self.populate_listbox()
 
     def erase(self):
         self.fname.delete(0, END)
@@ -77,36 +104,78 @@ class Application(Frame):
         self.zip.delete(0, END)
         self.email.delete(0, END)
         self.phone.delete(0, END)
+        self.id_box.delete(0,END)
         print "Function, erase had happen to all feilds"
 
     def OnDouble(self, event):
         widget = event.widget
         selection = widget.curselection()
-        value = widget.get(selection[0])
-        print "selection:", selection, ": '%s'" % value
+        value = widget.get(selection[0]).split("\t\t")
+
+        
+        contact = Contact.get(Contact.id == value[0])
+
+        self.fname.delete(0, END)
+        self.lname.delete(0, END)
+        self.address.delete(0, END)
+        self.city.delete(0, END)
+        self.state.delete(0, END)
+        self.zip.delete(0, END)
+        self.email.delete(0, END)
+        self.phone.delete(0, END)
+        self.id_box.delete(0,END)
+
+        if(contact.first_name != "First name"):
+            self.fname.insert(0, contact.first_name)
+        if(contact.last_name != "Last name"):
+            self.lname.insert(0, contact.last_name)
+        if(contact.address != "Address"):
+            self.address.insert(0, contact.address)
+        if(contact.city != "City"):
+            self.city.insert(0, contact.city)
+        if(contact.state != "State"):
+            self.state.insert(0, contact.state)
+        if(contact.zip_code != "Zip"):
+            self.zip.insert(0, contact.zip_code)
+        if(contact.email != "Email address"):
+            self.email.insert(0, contact.email)
+        if(contact.phone != "Phone number"):
+            self.phone.insert(0, contact.phone)
+        
+        self.id_box.insert(0, value[0])
+
+        print self.id_box.get()
 
     def display_address(self, b, array): #FIXME: What is 'b'??
+        s = "\t\t"
         if type(array) == dict:
             for item in array:
                 if type(item) == str:
                     self.listbox.insert(END, item)
                 else:
-                    list_output = item.last_name + "\t\t" + item.zip_code
+                    list_output = item.last_name + s + item.zip_code
                     self.listbox.insert(END, list_output)
         else:
-            list_output = array.last_name + "\t\t" + array.first_name + "\t\t" + array.address + "\t\t" + array.city + "\t\t" + array.state + "\t\t" + array.zip_code
+            list_output = str(array.id) + s + array.first_name + s + array.last_name + s + array.address + s + array.city + s + array.state + s + array.zip_code
             self.listbox.insert(END, list_output)
         # self.listbox.place(x=1, y=2)
         # end of list view
+    def populate_listbox(self):
+        ab = self.addressbook.id
+        contacts = Contact.select().where(Contact.ab == ab)
+        s = "\t\t"
+        self.create_listbox()
+        for i in contacts:
+            self.listbox.insert(END, str(i.id) + s + i.first_name + s + i.last_name + s + i.address + s + i.city + s + i.state + s + i.zip_code)
 
     def createWidgets(self):
     	all_contact_instances = Contact.select()
-    	print all_contact_instances[0].lname
+    	print(self.addressbook.id)
         # Textbox entry
-        self.search = Entry(self, width=40)
+        self.search = Entry(self, width=50)
         self.search.grid(row=1, column=0, columnspan=2)
         self.search.delete(0, END)
-        self.search.insert(0, "Search for contact")
+        self.search.insert(0, "                                Search for contact")
 
         self.fname = Entry(self, width=15)
         self.fname.grid(row=5, sticky=W)
@@ -152,37 +221,53 @@ class Application(Frame):
         self.phone.grid(row=10, column=0, sticky=W)
         self.phone.delete(0, END)
         self.phone.insert(0, "Phone number")
+
+        self.id_box = Entry(self, width=0)
+        self.id_box.grid(row=16, column=0, sticky=W)
+        self.id_box.delete(0, END)
+        self.id_box.insert(0, "") 
         # end of textbox
 
         # Bottons
-        self.searchB = Button(self)
-        self.searchB["text"] = "Search",
-        self.searchB["command"] = self.search
-        self.searchB.grid(row=1, column=2)
+        self.search_b = Button(self)
+        self.search_b["text"] = "Search",
+        self.search_b["command"] = self.searching
+        self.search_b.grid(row=1, column=3)
 
         self.add_b = Button(self)
         self.add_b["text"] = "Add",
         self.add_b["command"] = self.add
-        self.add_b.grid(row=13, column=1)
+        self.add_b.grid(row=14, column=1)
 
         self.delete_b = Button(self)
         self.delete_b["text"] = "Delete",
         self.delete_b["command"] = self.delete
-        self.delete_b.grid(row=13, column=2)
+        self.delete_b.grid(row=14, column=2)
 
         self.update_b = Button(self)
         self.update_b["text"] = "Update",
         self.update_b["command"] = self.update
-        self.update_b.grid(row=13, column=3, sticky=E)
+        self.update_b.grid(row=14, column=3, sticky=E)
 
         self.erase_b = Button(self)
         self.erase_b["text"] = "New",
         self.erase_b["command"] = self.erase
-        self.erase_b.grid(row=13, column=0, sticky=E)
+        self.erase_b.grid(row=14, column=0, sticky=E)
+
+
+        self.show_all = Button(self)
+        self.show_all["text"] = "Show all contacts"
+        self.show_all["command"] = self.populate_listbox
+        self.show_all.grid(row=15, column=1)
         # end of bottons
 
+        self.create_listbox()
 
-        self.listbox = Listbox(self, width=65)
+        self.populate_listbox()
+
+
+    def create_listbox(self):
+        self.listbox = Listbox(self, width=75)
         self.listbox.grid(row=2, column=0, columnspan=6)
         self.listbox.bind("<Double-Button-1>", self.OnDouble)
 
@@ -202,7 +287,7 @@ class Application(Frame):
         # parse contact from
         self.list_content_update()  # this call is so that we will get an updated listbox
 
-    def __init__(self, master=None):
+    def __init__(self, addressbook, master=None):
         Frame.__init__(self, master)
         #
         self.menubar = Menu(self)
@@ -228,16 +313,16 @@ class Application(Frame):
                              height=400, bd=0, highlightthickness=0)
         #
         self.grid()
-
+        self.addressbook = addressbook
         self.createWidgets()
 
 if __name__ == "__main__":
     root = Tk()
-    root.geometry("470x400")
+    root.geometry("540x426")
     create_tables()
-    BOOK_NAME = tkSimpleDialog.askstring("Book name","Enter book name") #Simple dialog gets book name
+    BOOK_NAME = tkSimpleDialog.askstring("Addressbook name","Enter addressbook name") #Simple dialog gets book name
     addressbook = create_addressbook(BOOK_NAME)
-    print("addressbook id: "+ str(addressbook.id))
+    
     # root.resizable(width=FALSE, height=FALSE) # this for the window to be unrealizable
-    app = Application(master=root)
+    app = Application(addressbook, master=root)
     app.mainloop()
