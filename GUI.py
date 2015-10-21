@@ -34,7 +34,7 @@ class Application(Frame):
         person = create_contact(contact, 4) #FIXME: The 4 needs to be replaced by the addressbook.id of the book it belongs to
         #contact[8] = "add")
         new_contact = Contact.get(Contact.id == person)
-        self.display_address(self,new_contact)
+        #self.display_address(self,new_contact)
 
 
     def list_content_update(self):
@@ -84,11 +84,12 @@ class Application(Frame):
 
     def display_address(self, b, array): #FIXME: What is 'b'??
         # List view
-        listbox = Listbox(self, width=25)
-        listbox.grid(row=2, column=0)
+        listbox = Listbox(self, width=60)
+        listbox.grid(row=2, column=0, columnspan=2)
         listbox.insert(END, "a list entry")
         listbox.bind("<Double-Button-1>", self.OnDouble)
-        if type(array) == list:
+
+        if type(array) == dict:
             for item in array:
                 if type(item) == str:
                     listbox.insert(END, item)
@@ -102,7 +103,7 @@ class Application(Frame):
         # end of list view
 
     def createWidgets(self):
-        a = ["one", "two", "three", "four"]
+        a = {"one": "1", "two": "2", "three": "3", "four": "4", "on": "1", "tw": "2", "thre": "3", "fou": "4", "ne": "1", "wo": "2", "tree": "3", "for": "4"}
         self.display_address(self, a)
 
         # Textbox entry
@@ -237,3 +238,6 @@ if __name__ == "__main__":
     # root.resizable(width=FALSE, height=FALSE) # this for the window to be unrealizable
     app = Application(master=root)
     app.mainloop()
+
+
+
