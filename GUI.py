@@ -39,6 +39,24 @@ class Application(Frame):
         new_contact = Contact.get(Contact.id == person)
         self.display_address(self,new_contact)
 
+    def sort_contacts(self,*args):
+        s = '\t\t'
+        order = self.sort_by.get()
+        if order == "Zip Code": # zip_code, ties broken by first name
+            temp_list = Contact.select().where(Contact.ab == addressbook.id).order_by(Contact.zip_code,Contact.first_name)
+            self.listbox.delete(0,END)
+            for i in temp_list:
+                self.listbox.insert(END, str(i.id) + s + i.first_name + s + i.last_name + s + i.address + s + i.city + s + i.state + s + i.zip_code)
+        if order == "Last Name": # last name
+            temp_list = Contact.select().where(Contact.ab == addressbook.id).order_by(Contact.first_name)
+            self.listbox.delete(0,END)
+            for i in temp_list:
+                self.listbox.insert(END, str(i.id) + s + i.first_name + s + i.last_name + s + i.address + s + i.city + s + i.state + s + i.zip_code)
+        if order == "First Name":
+            temp_list = Contact.select().where(Contact.ab == addressbook.id).order_by(Contact.last_name)
+            self.listbox.delete(0,END)
+            for i in temp_list:
+                self.listbox.insert(END, str(i.id) + s + i.first_name + s + i.last_name + s + i.address + s + i.city + s + i.state + s + i.zip_code)
 
     def list_content_update(self):
         a = ["strings"]
@@ -51,8 +69,8 @@ class Application(Frame):
 
         try:
             if tkMessageBox.askyesno('Verify', 'Are you sure you want to delete?'):
-                d = Contact.delete().where(Contact.id == self.id_box.get())
-                d.execute()
+                del_contact = Contact.get(Contact.id == self.id_box.get())
+                del_contact.delete_instance()
                 self.populate_listbox()
 
                 self.fname.delete(0, END)
@@ -84,13 +102,13 @@ class Application(Frame):
         db_id = self.id_box.get()
 
         try:
-            
+
             d = Contact.delete().where(Contact.id == db_id)
             d.execute()
 
         except ValueError:
             print "Double click the contact you want to update, then click update again!"
-        
+
         self.add()
         self.populate_listbox()
 
@@ -112,7 +130,7 @@ class Application(Frame):
         selection = widget.curselection()
         value = widget.get(selection[0]).split("\t\t")
 
-        
+
         contact = Contact.get(Contact.id == value[0])
 
         self.fname.delete(0, END)
@@ -141,7 +159,7 @@ class Application(Frame):
             self.email.insert(0, contact.email)
         if(contact.phone != "Phone number"):
             self.phone.insert(0, contact.phone)
-        
+
         self.id_box.insert(0, value[0])
 
         print self.id_box.get()
@@ -172,67 +190,75 @@ class Application(Frame):
     	all_contact_instances = Contact.select()
     	print(self.addressbook.id)
         # Textbox entry
-        self.search = Entry(self, width=50)
-        self.search.grid(row=1, column=0, columnspan=2)
+        self.search = Entry(self, width=30)
+        self.search.grid(row=1, column=0, columnspan=2,pady=10,padx=5)
         self.search.delete(0, END)
-        self.search.insert(0, "                                Search for contact")
+        self.search.insert(0, "Search for contact")
 
         self.fname = Entry(self, width=15)
-        self.fname.grid(row=5, sticky=W)
+        self.fname.grid(row=5, column=0, sticky=W,pady=5)
         self.fname.delete(0, END)
         self.fname.insert(0, "First name")
 
-        self.lname = Entry(self, width=10)
-        self.lname.grid(row=5, column=1, sticky=W)
+        self.lname = Entry(self, width=15)
+        self.lname.grid(row=5,column=1, sticky=W,pady=5)
         self.lname.delete(0, END)
         self.lname.insert(0, "Last name")
 
-        self.address = Entry(self, width=20)
-        self.address.grid(row=6, sticky=W)
+        self.address = Entry(self, width=25)
+        self.address.grid(row=6, sticky=W,pady=5)
         self.address.delete(0, END)
         self.address.insert(0, "Address line 1")
 
-        self.address2 = Entry(self, width=20)
+        self.address2 = Entry(self, width=25)
         self.address2.grid(row=7, sticky=W)
         self.address2.delete(0, END)
         self.address2.insert(0, "Address line 2")
 
-        self.city = Entry(self, width=10)
-        self.city.grid(row=8, sticky=W)
+        self.city = Entry(self, width=15)
+        self.city.grid(row=8, sticky=W,pady=10)
         self.city.delete(0, END)
         self.city.insert(0, "City")
 
-        self.state = Entry(self, width=5)
-        self.state.grid(row=8, column=1, sticky=W)
+        self.state = Entry(self, width=15)
+        self.state.grid(row=8, column=1, sticky=W,pady=5)
         self.state.delete(0, END)
         self.state.insert(0, "State")
 
-        self.zip = Entry(self, width=5)
-        self.zip.grid(row=8, column=2, sticky=W)
+        self.zip = Entry(self, width=10)
+        self.zip.grid(row=8, column=2, sticky=W,pady=5)
         self.zip.delete(0, END)
         self.zip.insert(0, "Zip")
 
-        self.email = Entry(self, width=18)
-        self.email.grid(row=9, column=0, sticky=W)
+        self.email = Entry(self, width=20)
+        self.email.grid(row=9, column=0, sticky=W,pady=5)
         self.email.delete(0, END)
         self.email.insert(0, "Email address")
 
-        self.phone = Entry(self, width=13)
-        self.phone.grid(row=10, column=0, sticky=W)
+        self.phone = Entry(self, width=20)
+        self.phone.grid(row=10, column=0, sticky=W,pady=5)
         self.phone.delete(0, END)
         self.phone.insert(0, "Phone number")
 
         self.id_box = Entry(self, width=0)
         self.id_box.grid(row=16, column=0, sticky=W)
         self.id_box.delete(0, END)
-        self.id_box.insert(0, "") 
+        self.id_box.insert(0, "")
         # end of textbox
+        # self.sort_label = Label(text="Sort by: ")
+        # self.sort_label.grid(row=5,column=3,padx=5,pady=10,stick=E)
+        sort = ["Last Name","First Name","Zip Code"]
+        self.sort_by = StringVar()
 
+        self.sort_by.trace("w",callback=self.sort_contacts)
+        self.sort_option = OptionMenu(self,self.sort_by,*sort)
+
+        self.sort_option.grid(row=5,column=3,sticky=W)
         # Bottons
         self.search_b = Button(self)
         self.search_b["text"] = "Search",
         self.search_b["command"] = self.searching
-        self.search_b.grid(row=1, column=3)
+        self.search_b.grid(row=1, column=2)
 
         self.add_b = Button(self)
         self.add_b["text"] = "Add",
@@ -268,7 +294,7 @@ class Application(Frame):
 
     def create_listbox(self):
         self.listbox = Listbox(self, width=75)
-        self.listbox.grid(row=2, column=0, columnspan=6)
+        self.listbox.grid(row=2, column=0, columnspan=10,pady=10,padx=5)
         self.listbox.bind("<Double-Button-1>", self.OnDouble)
 
 
@@ -288,7 +314,7 @@ class Application(Frame):
         self.list_content_update()  # this call is so that we will get an updated listbox
 
     def __init__(self, addressbook, master=None):
-        Frame.__init__(self, master)
+        Frame.__init__(self, master,bd=10)
         #
         self.menubar = Menu(self)
         menu = Menu(self.menubar, tearoff=0)
@@ -322,7 +348,7 @@ if __name__ == "__main__":
     create_tables()
     BOOK_NAME = tkSimpleDialog.askstring("Addressbook name","Enter addressbook name") #Simple dialog gets book name
     addressbook = create_addressbook(BOOK_NAME)
-    
+
     # root.resizable(width=FALSE, height=FALSE) # this for the window to be unrealizable
     app = Application(addressbook, master=root)
     app.mainloop()
