@@ -27,7 +27,9 @@ class Application(Frame):
         contact["city"] = self.city.get()
         contact["state"] = self.state.get()
         contact["zip_code"] = self.zip.get()
-        contact["phone"] = self.phone.get()
+        phone = self.phone.get()
+        phone.strip(['()-'])
+        contact["phone"] = phone
         contact["email"] = self.email.get()
 
         return contact
@@ -46,17 +48,32 @@ class Application(Frame):
             temp_list = Contact.select().where(Contact.ab == addressbook.id).order_by(Contact.zip_code,Contact.first_name)
             self.listbox.delete(0,END)
             for i in temp_list:
+
                 self.listbox.insert(END, str(i.id) + s + i.first_name + s + i.last_name + s + i.address + s + i.city + s + i.state + s + i.zip_code)
+
+                fmt_str = "{0:<15} {1:<15} {2:<015} {3:<15} {4:<15} {5:<15} {6!r:<15} {7:<015}".format(i.last_name,i.first_name, i.address, i.city, i.state,i.zip_code, i.phone, i.email)
+                self.listbox.insert(END, fmt_str)
+
         if order == "Last Name": # last name
             temp_list = Contact.select().where(Contact.ab == addressbook.id).order_by(Contact.first_name)
             self.listbox.delete(0,END)
             for i in temp_list:
+
                 self.listbox.insert(END, str(i.id) + s + i.first_name + s + i.last_name + s + i.address + s + i.city + s + i.state + s + i.zip_code)
+
+                fmt_str = "{0:<15} {1:<15} {2:<015} {3:<15} {4:<15} {5:<15} {6!r:<15} {7:<015}".format(i.last_name,i.first_name, i.address, i.city, i.state,i.zip_code, i.phone, i.email)
+                self.listbox.insert(END, fmt_str)
+
         if order == "First Name":
             temp_list = Contact.select().where(Contact.ab == addressbook.id).order_by(Contact.last_name)
             self.listbox.delete(0,END)
             for i in temp_list:
+
                 self.listbox.insert(END, str(i.id) + s + i.first_name + s + i.last_name + s + i.address + s + i.city + s + i.state + s + i.zip_code)
+
+                fmt_str = "{0:<15} {1:<15} {2:<015} {3:<15} {4:<15} {5:<15} {6!r:<15} {7:<015}".format(i.last_name,i.first_name, i.address, i.city, i.state,i.zip_code, i.phone, i.email)
+                self.listbox.insert(END, fmt_str)
+
 
     def list_content_update(self):
         a = ["strings"]
@@ -96,14 +113,13 @@ class Application(Frame):
         s = "\t\t"
         self.create_listbox()
         for i in contacts:
-            self.listbox.insert(END, str(i.id) + s + i.first_name + s + i.last_name + s + i.address + s + i.city + s + i.state + s + i.zip_code)
+            fmt_str = "{0:<15} {1:<15} {2:<015} {3:<15} {4:<15} {5:<15} {6!r:<15} {7:<015}".format(i.last_name,i.first_name, i.address, i.city, i.state,i.zip_code, i.phone, i.email)
+            self.listbox.insert(END, fmt_str)
 
     def update(self):
         db_id = self.id_box.get()
 
         try:
-
-            d = Contact.delete().where(Contact.id == db_id)
             d.execute()
 
         except ValueError:
@@ -184,7 +200,8 @@ class Application(Frame):
         s = "\t\t"
         self.create_listbox()
         for i in contacts:
-            self.listbox.insert(END, str(i.id) + s + i.first_name + s + i.last_name + s + i.address + s + i.city + s + i.state + s + i.zip_code)
+            fmt_str = "{0:<15} {1:<15} {2:<015} {3:<15} {4:<15} {5:<15} {6!r:<15} {7:<015}".format(i.last_name,i.first_name, i.address, i.city, i.state,i.zip_code, i.phone, i.email)
+            self.listbox.insert(END, fmt_str)
 
     def createWidgets(self):
         all_contact_instances = Contact.select()
@@ -250,8 +267,13 @@ class Application(Frame):
         sort = ["Last Name","First Name","Zip Code"]
         self.sort_by = StringVar()
 
+
         self.sort_by.trace("w",callback=self.sort_contacts)
         self.sort_option = OptionMenu(self,self.sort_by,*sort)
+
+        self.sort_by.trace("w",callback=self.sort_contacts)
+        self.sort_option = OptionMenu(self,self.sort_by,*sort)
+
 
         self.sort_option.grid(row=5,column=3,sticky=W)
         # Bottons
@@ -296,6 +318,7 @@ class Application(Frame):
         self.listbox = Listbox(self, width=75)
         self.listbox.grid(row=2, column=0, columnspan=10,pady=10,padx=5)
         self.listbox.bind("<Double-Button-1>", self.OnDouble)
+
 
 
     def export(self):
