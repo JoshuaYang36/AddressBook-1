@@ -9,7 +9,7 @@ from Tkinter import *
 from test import *
 import tkSimpleDialog # For Addressbook name
 import tkMessageBox
-
+from tkFileDialog import askopenfilename
 
 class Application(Frame):
 
@@ -41,28 +41,23 @@ class Application(Frame):
         self.display_address(self,new_contact)
 
     def sort_contacts(self,*args):
-        
+        s = "\t\t"
         order = self.sort_by.get()
         if order == "Zip Code": # zip_code, ties broken by first name
             temp_list = Contact.select().where(Contact.ab == addressbook.id).order_by(Contact.zip_code,Contact.first_name)
             self.listbox.delete(0,END)
             for i in temp_list:
-                fmt_str = "{0:<15} {1:<15} {2:<15} {3:<15} {4:<15} {5:<15} {6:<15} {7:<15} {8:<15}".format(str(i.id), i.last_name,i.first_name, i.address, i.city, i.state,i.zip_code, i.phone, i.email)
-                self.listbox.insert(END, fmt_str)       
-
+                self.listbox.insert(END, str(i.id) + s + i.first_name + s + i.last_name + s + i.address + s + i.city + s + i.state + s + i.zip_code)
         if order == "Last Name": # last name
             temp_list = Contact.select().where(Contact.ab == addressbook.id).order_by(Contact.last_name)
             self.listbox.delete(0,END)
             for i in temp_list:
-                fmt_str = "{0:<15} {1:<15} {2:<15} {3:<15} {4:<15} {5:<15} {6:<15} {7:<15} {8:<15}".format(str(i.id), i.last_name,i.first_name, i.address, i.city, i.state,i.zip_code, i.phone, i.email)
-                self.listbox.insert(END, fmt_str)
-
+                self.listbox.insert(END, str(i.id) + s + i.first_name + s + i.last_name + s + i.address + s + i.city + s + i.state + s + i.zip_code)
         if order == "First Name":
             temp_list = Contact.select().where(Contact.ab == addressbook.id).order_by(Contact.first_name)
             self.listbox.delete(0,END)
             for i in temp_list:
-                fmt_str = "{0:<15} {1:<15} {2:<15} {3:<15} {4:<15} {5:<15} {6:<15} {7:<15} {8:<15}".format(str(i.id), i.last_name,i.first_name, i.address, i.city, i.state,i.zip_code, i.phone, i.email)
-                self.listbox.insert(END, fmt_str)
+                self.listbox.insert(END, str(i.id) + s + i.first_name + s + i.last_name + s + i.address + s + i.city + s + i.state + s + i.zip_code)
 
 
     def list_content_update(self):
@@ -103,13 +98,13 @@ class Application(Frame):
         s = "\t\t"
         self.create_listbox()
         for i in contacts:
-            fmt_str = "{0:<15} {1:<15} {2:<15} {3:<15} {4:<15} {5:<15} {6!r:<15} {7:<15} {8:<15}".format(str(i.id), i.last_name,i.first_name, i.address, i.city, i.state,i.zip_code, i.phone, i.email)
-            self.listbox.insert(END, fmt_str)
+            self.listbox.insert(END, str(i.id) + s + i.first_name + s + i.last_name + s + i.address + s + i.city + s + i.state + s + i.zip_code)
 
     def update(self):
         db_id = self.id_box.get()
 
         try:
+
             d = Contact.delete().where(Contact.id == db_id)
             d.execute()
 
@@ -145,7 +140,7 @@ class Application(Frame):
                 print super_id
             else:
                 break
-        
+
         contact = Contact.get(Contact.id == super_id)
 
         self.fname.delete(0, END)
@@ -178,7 +173,7 @@ class Application(Frame):
 
         self.id_box.insert(0, super_id)
 
-        
+
 
     def display_address(self, b, array): #FIXME: What is 'b'??
         s = "\t\t"
@@ -197,11 +192,11 @@ class Application(Frame):
     def populate_listbox(self):
         ab = self.addressbook.id
         contacts = Contact.select().where(Contact.ab == ab)
-        
+        s = "\t\t"
         self.create_listbox()
         for i in contacts:
-            fmt_str = "{0:<15} {1:<15} {2:<15} {3:<15} {4:<15} {5:<15} {6:<15} {7:<15} {8:<15}".format(str(i.id), i.last_name,i.first_name, i.address, i.city, i.state,i.zip_code, i.phone, i.email)
-            self.listbox.insert(END, fmt_str)
+            self.listbox.insert(END, str(i.id) + s + i.first_name + s + i.last_name + s + i.address + s + i.city + s + i.state + s + i.zip_code)
+
 
     def createWidgets(self):
         all_contact_instances = Contact.select()
@@ -320,9 +315,9 @@ class Application(Frame):
         self.listbox.bind("<Double-Button-1>", self.OnDouble)
 
 
-
     def export(self):
-        test.export_addressbook("exported_filename.tsv", 1)
+        file_name = AddressBook.get(AddressBook.id == addressbook.id).name + ".tsv"
+        export_addressbook(file_name, addressbook.id)
 
         # this function will call the function that will make the export of the
         # data base
@@ -330,11 +325,12 @@ class Application(Frame):
     def impot(self):
         # this function will call the function that will make the import to the
         # data base
-        print "imported"
         imported_contacts = askopenfilename()
+        populate_addressbook(imported_contacts,addressbook.id)
         # now use "imported_contacts" as the file path of the file that you'll
         # parse contact from
-        self.list_content_update()  # this call is so that we will get an updated listbox
+        self.populate_listbox()
+        # this call is so that we will get an updated listbox
 
     def __init__(self, addressbook, master=None):
         Frame.__init__(self, master,bd=10)
