@@ -16,7 +16,8 @@ class Application(Frame):
     def retrieve_input(self):
         contact = {"first_name": None, "last_name": None, "address": None,
             "city": None, "state": None, "zip_code": None, "phone": None, "email": None}
-        if self.address.get() == "Address line 2":
+
+        if self.address2.get() != "Address line 2":
             address = self.address.get() + " " + self.address2.get()
         else:
             address = self.address.get()
@@ -27,9 +28,7 @@ class Application(Frame):
         contact["city"] = self.city.get()
         contact["state"] = self.state.get()
         contact["zip_code"] = self.zip.get()
-        phone = self.phone.get()
-        phone.strip(['()-'])
-        contact["phone"] = phone
+        contact["phone"] = self.phone.get()
         contact["email"] = self.email.get()
 
         return contact
@@ -42,36 +41,27 @@ class Application(Frame):
         self.display_address(self,new_contact)
 
     def sort_contacts(self,*args):
-        s = '\t\t'
+        
         order = self.sort_by.get()
         if order == "Zip Code": # zip_code, ties broken by first name
             temp_list = Contact.select().where(Contact.ab == addressbook.id).order_by(Contact.zip_code,Contact.first_name)
             self.listbox.delete(0,END)
             for i in temp_list:
-
-                self.listbox.insert(END, str(i.id) + s + i.first_name + s + i.last_name + s + i.address + s + i.city + s + i.state + s + i.zip_code)
-
-                fmt_str = "{0:<15} {1:<15} {2:<015} {3:<15} {4:<15} {5:<15} {6!r:<15} {7:<015}".format(i.last_name,i.first_name, i.address, i.city, i.state,i.zip_code, i.phone, i.email)
-                self.listbox.insert(END, fmt_str)
+                fmt_str = "{0:<15} {1:<15} {2:<15} {3:<15} {4:<15} {5:<15} {6:<15} {7:<15} {8:<15}".format(str(i.id), i.last_name,i.first_name, i.address, i.city, i.state,i.zip_code, i.phone, i.email)
+                self.listbox.insert(END, fmt_str)       
 
         if order == "Last Name": # last name
-            temp_list = Contact.select().where(Contact.ab == addressbook.id).order_by(Contact.first_name)
-            self.listbox.delete(0,END)
-            for i in temp_list:
-
-                self.listbox.insert(END, str(i.id) + s + i.first_name + s + i.last_name + s + i.address + s + i.city + s + i.state + s + i.zip_code)
-
-                fmt_str = "{0:<15} {1:<15} {2:<015} {3:<15} {4:<15} {5:<15} {6!r:<15} {7:<015}".format(i.last_name,i.first_name, i.address, i.city, i.state,i.zip_code, i.phone, i.email)
-                self.listbox.insert(END, fmt_str)
-
-        if order == "First Name":
             temp_list = Contact.select().where(Contact.ab == addressbook.id).order_by(Contact.last_name)
             self.listbox.delete(0,END)
             for i in temp_list:
+                fmt_str = "{0:<15} {1:<15} {2:<15} {3:<15} {4:<15} {5:<15} {6:<15} {7:<15} {8:<15}".format(str(i.id), i.last_name,i.first_name, i.address, i.city, i.state,i.zip_code, i.phone, i.email)
+                self.listbox.insert(END, fmt_str)
 
-                self.listbox.insert(END, str(i.id) + s + i.first_name + s + i.last_name + s + i.address + s + i.city + s + i.state + s + i.zip_code)
-
-                fmt_str = "{0:<15} {1:<15} {2:<015} {3:<15} {4:<15} {5:<15} {6!r:<15} {7:<015}".format(i.last_name,i.first_name, i.address, i.city, i.state,i.zip_code, i.phone, i.email)
+        if order == "First Name":
+            temp_list = Contact.select().where(Contact.ab == addressbook.id).order_by(Contact.first_name)
+            self.listbox.delete(0,END)
+            for i in temp_list:
+                fmt_str = "{0:<15} {1:<15} {2:<15} {3:<15} {4:<15} {5:<15} {6:<15} {7:<15} {8:<15}".format(str(i.id), i.last_name,i.first_name, i.address, i.city, i.state,i.zip_code, i.phone, i.email)
                 self.listbox.insert(END, fmt_str)
 
 
@@ -113,13 +103,14 @@ class Application(Frame):
         s = "\t\t"
         self.create_listbox()
         for i in contacts:
-            fmt_str = "{0:<15} {1:<15} {2:<015} {3:<15} {4:<15} {5:<15} {6!r:<15} {7:<015}".format(i.last_name,i.first_name, i.address, i.city, i.state,i.zip_code, i.phone, i.email)
+            fmt_str = "{0:<15} {1:<15} {2:<15} {3:<15} {4:<15} {5:<15} {6!r:<15} {7:<15} {8:<15}".format(str(i.id), i.last_name,i.first_name, i.address, i.city, i.state,i.zip_code, i.phone, i.email)
             self.listbox.insert(END, fmt_str)
 
     def update(self):
         db_id = self.id_box.get()
 
         try:
+            d = Contact.delete().where(Contact.id == db_id)
             d.execute()
 
         except ValueError:
@@ -144,10 +135,18 @@ class Application(Frame):
     def OnDouble(self, event):
         widget = event.widget
         selection = widget.curselection()
-        value = widget.get(selection[0]).split("\t\t")
 
+        super_id = ""
+        value = widget.get(selection[0])
 
-        contact = Contact.get(Contact.id == value[0])
+        for i in range (10):
+            if value[i].isdigit():
+                super_id += value[i]
+                print super_id
+            else:
+                break
+        
+        contact = Contact.get(Contact.id == super_id)
 
         self.fname.delete(0, END)
         self.lname.delete(0, END)
@@ -158,6 +157,7 @@ class Application(Frame):
         self.email.delete(0, END)
         self.phone.delete(0, END)
         self.id_box.delete(0,END)
+
 
         if(contact.first_name != "First name"):
             self.fname.insert(0, contact.first_name)
@@ -176,9 +176,9 @@ class Application(Frame):
         if(contact.phone != "Phone number"):
             self.phone.insert(0, contact.phone)
 
-        self.id_box.insert(0, value[0])
+        self.id_box.insert(0, super_id)
 
-        print self.id_box.get()
+        
 
     def display_address(self, b, array): #FIXME: What is 'b'??
         s = "\t\t"
@@ -190,17 +190,17 @@ class Application(Frame):
                     list_output = item.last_name + s + item.zip_code
                     self.listbox.insert(END, list_output)
         else:
-            list_output = str(array.id) + s + array.first_name + s + array.last_name + s + array.address + s + array.city + s + array.state + s + array.zip_code
+            list_output = "{0:<15} {1:<15} {2:<15} {3:<15} {4:<15} {5:<15} {6:<15} {7:<15} {8:<15}".format(str(array.id), array.last_name,array.first_name, array.address, array.city, array.state,array.zip_code, array.phone, array.email)
             self.listbox.insert(END, list_output)
         # self.listbox.place(x=1, y=2)
         # end of list view
     def populate_listbox(self):
         ab = self.addressbook.id
         contacts = Contact.select().where(Contact.ab == ab)
-        s = "\t\t"
+        
         self.create_listbox()
         for i in contacts:
-            fmt_str = "{0:<15} {1:<15} {2:<015} {3:<15} {4:<15} {5:<15} {6!r:<15} {7:<015}".format(i.last_name,i.first_name, i.address, i.city, i.state,i.zip_code, i.phone, i.email)
+            fmt_str = "{0:<15} {1:<15} {2:<15} {3:<15} {4:<15} {5:<15} {6:<15} {7:<15} {8:<15}".format(str(i.id), i.last_name,i.first_name, i.address, i.city, i.state,i.zip_code, i.phone, i.email)
             self.listbox.insert(END, fmt_str)
 
     def createWidgets(self):
@@ -367,7 +367,7 @@ class Application(Frame):
 
 if __name__ == "__main__":
     root = Tk()
-    root.geometry("540x426")
+    root.geometry("600x550")
     create_tables()
     BOOK_NAME = tkSimpleDialog.askstring("Addressbook name","Enter addressbook name") #Simple dialog gets book name
     addressbook = create_addressbook(BOOK_NAME)
