@@ -9,6 +9,7 @@ from Tkinter import *
 from test import *
 import tkSimpleDialog # For Addressbook name
 import tkMessageBox
+import string
 from tkFileDialog import askopenfilename
 
 class Application(Frame):
@@ -49,7 +50,8 @@ class Application(Frame):
             for i in temp_list:
 
                 if i.phone != "":
-                    i.phone.replace(" ","")
+                    phone = str(i.phone)
+                    phone.translate(None,'-() ').replace(" ", "")
                     phone = "(" + i.phone[0:3] + ")" + " "+ i.phone[3:6] + "-" + i.phone[6:10]
                 else:
                     phone = ""
@@ -62,7 +64,8 @@ class Application(Frame):
             for i in temp_list:
 
                 if i.phone != "":
-                    i.phone.replace(" ","")
+                    phone = str(i.phone)
+                    phone.translate(None,'-() ').replace(" ", "")
                     phone = "(" + i.phone[0:3] + ")" + " "+ i.phone[3:6] + "-" + i.phone[6:10]
                 else:
                     phone = ""
@@ -76,7 +79,8 @@ class Application(Frame):
 
                 
                 if i.phone != "":
-                    i.phone.replace(" ","")
+                    phone = str(i.phone)
+                    phone.translate(None,'-() ').replace(" ", "")
                     phone = "(" + i.phone[0:3] + ")" + " "+ i.phone[3:6] + "-" + i.phone[6:10]
                 else:
                     phone = ""
@@ -118,7 +122,8 @@ class Application(Frame):
         for i in contacts:
 
             if i.phone != "":
-                i.phone.replace(" ","")
+                phone = str(i.phone)
+                phone.translate(None,'-() ').replace(" ", "")
                 phone = "(" + i.phone[0:3] + ")" + " "+ i.phone[3:6] + "-" + i.phone[6:10]
             else:
                     phone = ""
@@ -208,7 +213,8 @@ class Application(Frame):
         for i in contacts:
 
             if i.phone != "":
-                i.phone.replace(" ","")
+                phone = str(i.phone)
+                phone.translate(None, '-() ').replace(" ", "")
                 phone = "(" + i.phone[0:3] + ")" + " "+ i.phone[3:6] + "-" + i.phone[6:10]
             else:
                     phone = ""
@@ -354,7 +360,7 @@ class Application(Frame):
 
 
     def create_listbox(self):
-        self.listbox = Listbox(self, width=105)
+        self.listbox = Listbox(self, width=110)
         self.listbox.grid(row=2, column=0, columnspan=10,pady=10,padx=5)
         self.listbox.bind("<Double-Button-1>", self.OnDouble)
 
@@ -407,7 +413,7 @@ class Application(Frame):
 
 if __name__ == "__main__":
     root = Tk()
-    root.geometry("760x470")
+    root.geometry("800x470")
     create_tables()
     BOOK_NAME = tkSimpleDialog.askstring("Addressbook name","Enter addressbook name") #Simple dialog gets book name
     addressbook = create_addressbook(BOOK_NAME)
