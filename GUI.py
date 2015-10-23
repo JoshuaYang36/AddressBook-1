@@ -38,7 +38,7 @@ class Application(Frame):
         person = create_contact(contact, addressbook.id) #FIXME: The 4 needs to be replaced by the addressbook.id of the book it belongs to
         #contact[8] = "add")
         new_contact = Contact.get(Contact.id == person)
-        self.display_address(self,new_contact)
+        self.populate_listbox()
 
     def sort_contacts(self,*args):
 
@@ -56,8 +56,6 @@ class Application(Frame):
                 fmt_str = "{0:<15} {1:<15} {2:<15} {3:<15} {4:<15} {5:<15} {6:<15} {7:<15} {8:<15}".format(str(i.id), i.last_name,i.first_name, i.address, i.city, i.state,i.zip_code, phone, i.email)
                 self.listbox.insert(END, fmt_str)       
 
-                self.listbox.insert(END, str(i.id) + s + i.first_name + s + i.last_name + s + i.address + s + i.city + s + i.state + s + i.zip_code)
-
         if order == "Last Name": # last name
             temp_list = Contact.select().where(Contact.ab == addressbook.id).order_by(Contact.last_name)
             self.listbox.delete(0,END)
@@ -70,8 +68,6 @@ class Application(Frame):
                     phone = ""
                 fmt_str = "{0:<15} {1:<15} {2:<15} {3:<15} {4:<15} {5:<15} {6:<15} {7:<15} {8:<15}".format(str(i.id), i.last_name,i.first_name, i.address, i.city, i.state,i.zip_code, phone, i.email)
                 self.listbox.insert(END, fmt_str)
-
-                self.listbox.insert(END, str(i.id) + s + i.first_name + s + i.last_name + s + i.address + s + i.city + s + i.state + s + i.zip_code)
 
         if order == "First Name":
             temp_list = Contact.select().where(Contact.ab == addressbook.id).order_by(Contact.first_name)
@@ -86,8 +82,6 @@ class Application(Frame):
                     phone = ""
                 fmt_str = "{0:<15} {1:<15} {2:<15} {3:<15} {4:<15} {5:<15} {6:<15} {7:<15} {8:<15}".format(str(i.id), i.last_name,i.first_name, i.address, i.city, i.state,i.zip_code, phone, i.email)
                 self.listbox.insert(END, fmt_str)
-
-                self.listbox.insert(END, str(i.id) + s + i.first_name + s + i.last_name + s + i.address + s + i.city + s + i.state + s + i.zip_code)
 
 
 
@@ -138,8 +132,7 @@ class Application(Frame):
             fmt_str = "{0:<15} {1:<15} {2:<15} {3:<15} {4:<15} {5:<15} {6:<15} {7:<15} {8:<15}".format(str(i.id), i.last_name,i.first_name, i.address, i.city, i.state,i.zip_code, phone, i.email)
             self.listbox.insert(END, fmt_str)
 
-            self.listbox.insert(END, str(i.id) + s + i.first_name + s + i.last_name + s + i.address + s + i.city + s + i.state + s + i.zip_code)
-
+            
 
     def update(self):
         db_id = self.id_box.get()
@@ -249,8 +242,6 @@ class Application(Frame):
                     phone = ""
             fmt_str = "{0:<15} {1:<15} {2:<15} {3:<15} {4:<15} {5:<15} {6:<15} {7:<15} {8:<15}".format(str(i.id), i.last_name,i.first_name, i.address, i.city, i.state,i.zip_code, phone, i.email)
             self.listbox.insert(END, fmt_str)
-
-            self.listbox.insert(END, str(i.id) + s + i.first_name + s + i.last_name + s + i.address + s + i.city + s + i.state + s + i.zip_code)
 
 
     def createWidgets(self):
