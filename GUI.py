@@ -306,7 +306,7 @@ class Application(Frame):
         
 
         self.id_box = Entry(self, width=0)
-        self.id_box.grid(row=16, column=0, sticky=W)
+        self.id_box.grid(row=17, column=0, sticky=W)
         self.id_box.delete(0, END)
         self.id_box.insert(0, "")
         # end of textbox
@@ -351,7 +351,7 @@ class Application(Frame):
         self.show_all = Button(self)
         self.show_all["text"] = "Show all contacts"
         self.show_all["command"] = self.populate_listbox
-        self.show_all.grid(row=15, column=1)
+        self.show_all.grid(row=14, column=5)
         # end of bottons
 
         self.create_listbox()
@@ -360,7 +360,7 @@ class Application(Frame):
 
 
     def create_listbox(self):
-        self.listbox = Listbox(self, width=110)
+        self.listbox = Listbox(self, width=110, selectmode=EXTENDED)
         self.listbox.grid(row=2, column=0, columnspan=10,pady=10,padx=5)
         self.listbox.bind("<Double-Button-1>", self.OnDouble)
 
@@ -413,7 +413,7 @@ class Application(Frame):
 
 if __name__ == "__main__":
     root = Tk()
-    root.geometry("800x470")
+    root.geometry("800x445")
     create_tables()
     BOOK_NAME = tkSimpleDialog.askstring("Addressbook name","Enter addressbook name") #Simple dialog gets book name
     addressbook = create_addressbook(BOOK_NAME)
