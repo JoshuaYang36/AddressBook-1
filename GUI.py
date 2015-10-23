@@ -42,26 +42,43 @@ class Application(Frame):
 
     def sort_contacts(self,*args):
         
+
         order = self.sort_by.get()
         if order == "Zip Code": # zip_code, ties broken by first name
             temp_list = Contact.select().where(Contact.ab == addressbook.id).order_by(Contact.zip_code,Contact.first_name)
             self.listbox.delete(0,END)
             for i in temp_list:
-                fmt_str = "{0:<15} {1:<15} {2:<15} {3:<15} {4:<15} {5:<15} {6:<15} {7:<15} {8:<15}".format(str(i.id), i.last_name,i.first_name, i.address, i.city, i.state,i.zip_code, i.phone, i.email)
+                if i.phone != "":
+                    i.phone.replace(" ","")
+                    phone = "(" + i.phone[0:3] + ")" + " "+ i.phone[3:6] + "-" + i.phone[6:10]
+                else:
+                    phone = ""
+                fmt_str = "{0:<15} {1:<15} {2:<15} {3:<15} {4:<15} {5:<15} {6:<15} {7:<15} {8:<15}".format(str(i.id), i.last_name,i.first_name, i.address, i.city, i.state,i.zip_code, phone, i.email)
                 self.listbox.insert(END, fmt_str)       
 
         if order == "Last Name": # last name
             temp_list = Contact.select().where(Contact.ab == addressbook.id).order_by(Contact.last_name)
             self.listbox.delete(0,END)
             for i in temp_list:
-                fmt_str = "{0:<15} {1:<15} {2:<15} {3:<15} {4:<15} {5:<15} {6:<15} {7:<15} {8:<15}".format(str(i.id), i.last_name,i.first_name, i.address, i.city, i.state,i.zip_code, i.phone, i.email)
+                if i.phone != "":
+                    i.phone.replace(" ","")
+                    phone = "(" + i.phone[0:3] + ")" + " "+ i.phone[3:6] + "-" + i.phone[6:10]
+                else:
+                    phone = ""
+                fmt_str = "{0:<15} {1:<15} {2:<15} {3:<15} {4:<15} {5:<15} {6:<15} {7:<15} {8:<15}".format(str(i.id), i.last_name,i.first_name, i.address, i.city, i.state,i.zip_code, phone, i.email)
                 self.listbox.insert(END, fmt_str)
 
         if order == "First Name":
             temp_list = Contact.select().where(Contact.ab == addressbook.id).order_by(Contact.first_name)
             self.listbox.delete(0,END)
             for i in temp_list:
-                fmt_str = "{0:<15} {1:<15} {2:<15} {3:<15} {4:<15} {5:<15} {6:<15} {7:<15} {8:<15}".format(str(i.id), i.last_name,i.first_name, i.address, i.city, i.state,i.zip_code, i.phone, i.email)
+                
+                if i.phone != "":
+                    i.phone.replace(" ","")
+                    phone = "(" + i.phone[0:3] + ")" + " "+ i.phone[3:6] + "-" + i.phone[6:10]
+                else:
+                    phone = ""
+                fmt_str = "{0:<15} {1:<15} {2:<15} {3:<15} {4:<15} {5:<15} {6:<15} {7:<15} {8:<15}".format(str(i.id), i.last_name,i.first_name, i.address, i.city, i.state,i.zip_code, phone, i.email)
                 self.listbox.insert(END, fmt_str)
 
 
@@ -103,12 +120,17 @@ class Application(Frame):
         s = "\t\t"
         self.create_listbox()
         for i in contacts:
-            fmt_str = "{0:<15} {1:<15} {2:<15} {3:<15} {4:<15} {5:<15} {6!r:<15} {7:<15} {8:<15}".format(str(i.id), i.last_name,i.first_name, i.address, i.city, i.state,i.zip_code, i.phone, i.email)
+            if i.phone != "":
+                i.phone.replace(" ","")
+                phone = "(" + i.phone[0:3] + ")" + " "+ i.phone[3:6] + "-" + i.phone[6:10]
+            else:
+                    phone = ""
+            fmt_str = "{0:<15} {1:<15} {2:<15} {3:<15} {4:<15} {5:<15} {6:<15} {7:<15} {8:<15}".format(str(i.id), i.last_name,i.first_name, i.address, i.city, i.state,i.zip_code, phone, i.email)
             self.listbox.insert(END, fmt_str)
 
     def update(self):
         db_id = self.id_box.get()
-
+        print(db_id)
         try:
             d = Contact.delete().where(Contact.id == db_id)
             d.execute()
@@ -180,18 +202,23 @@ class Application(Frame):
 
         
 
-    def display_address(self, b, array): #FIXME: What is 'b'??
-        s = "\t\t"
-        if type(array) == dict:
-            for item in array:
+    def display_address(self, b, i): #FIXME: What is 'b'??
+        
+        if type(i) == dict:
+            for item in i:
                 if type(item) == str:
                     self.listbox.insert(END, item)
                 else:
                     list_output = item.last_name + s + item.zip_code
                     self.listbox.insert(END, list_output)
         else:
-            list_output = "{0:<15} {1:<15} {2:<15} {3:<15} {4:<15} {5:<15} {6:<15} {7:<15} {8:<15}".format(str(array.id), array.last_name,array.first_name, array.address, array.city, array.state,array.zip_code, array.phone, array.email)
-            self.listbox.insert(END, list_output)
+            if i.phone != "":
+                i.phone.replace(" ","")
+                phone = "(" + i.phone[0:3] + ")" + " "+ i.phone[3:6] + "-" + i.phone[6:10]
+            else:
+                    phone = ""
+            fmt_str = "{0:<15} {1:<15} {2:<15} {3:<15} {4:<15} {5:<15} {6:<15} {7:<15} {8:<15}".format(str(i.id), i.last_name,i.first_name, i.address, i.city, i.state,i.zip_code, phone, i.email)
+            self.listbox.insert(END, fmt_str)
         # self.listbox.place(x=1, y=2)
         # end of list view
     def populate_listbox(self):
@@ -200,7 +227,12 @@ class Application(Frame):
         
         self.create_listbox()
         for i in contacts:
-            fmt_str = "{0:<15} {1:<15} {2:<15} {3:<15} {4:<15} {5:<15} {6:<15} {7:<15} {8:<15}".format(str(i.id), i.last_name,i.first_name, i.address, i.city, i.state,i.zip_code, i.phone, i.email)
+            if i.phone != "":
+                i.phone.replace(" ","")
+                phone = "(" + i.phone[0:3] + ")" + " "+ i.phone[3:6] + "-" + i.phone[6:10]
+            else:
+                    phone = ""
+            fmt_str = "{0:<15} {1:<15} {2:<15} {3:<15} {4:<15} {5:<15} {6:<15} {7:<15} {8:<15}".format(str(i.id), i.last_name,i.first_name, i.address, i.city, i.state,i.zip_code, phone, i.email)
             self.listbox.insert(END, fmt_str)
 
     def createWidgets(self):
@@ -208,54 +240,83 @@ class Application(Frame):
         print(self.addressbook.id)
         # Textbox entry
         self.search = Entry(self, width=30)
-        self.search.grid(row=1, column=0, columnspan=2,pady=10,padx=5)
+        self.search.grid(row=1, column=0, columnspan=2,pady=5)
         self.search.delete(0, END)
         self.search.insert(0, "Search for contact")
 
+        self.lfname = Label(self, text = "First Name")
+        self.lfname.grid(row=5, column=0)
+
         self.fname = Entry(self, width=15)
-        self.fname.grid(row=5, column=0, sticky=W,pady=5)
+        self.fname.grid(row=5, column=1, sticky=W)
         self.fname.delete(0, END)
-        self.fname.insert(0, "First name")
+      
+        self.lfname = Label(self, text = "Last Name")
+        self.lfname.grid(row=5, column=2)
 
         self.lname = Entry(self, width=15)
-        self.lname.grid(row=5,column=1, sticky=W,pady=5)
+        self.lname.grid(row=5,column=3, sticky=W)
         self.lname.delete(0, END)
-        self.lname.insert(0, "Last name")
+        
+
+        self.laddress = Label(self, text = "Address 1")
+        self.laddress.grid(row=6, column=0)
 
         self.address = Entry(self, width=25)
-        self.address.grid(row=6, sticky=W,pady=5)
+        self.address.grid(row=6, column=1, sticky=W)
         self.address.delete(0, END)
-        self.address.insert(0, "Address line 1")
+        
+
+
+        self.laddress2 = Label(self, text = "Address 2")
+        self.laddress2.grid(row=7, column=0)
 
         self.address2 = Entry(self, width=25)
-        self.address2.grid(row=7, sticky=W)
+        self.address2.grid(row=7, column=1, sticky=W)
         self.address2.delete(0, END)
-        self.address2.insert(0, "Address line 2")
+   
+
+
+        self.lcity = Label(self, text = "City")
+        self.lcity.grid(row=8, column=0)
 
         self.city = Entry(self, width=15)
-        self.city.grid(row=8, sticky=W,pady=10)
+        self.city.grid(row=8, column =1, sticky=W)
         self.city.delete(0, END)
-        self.city.insert(0, "City")
+     
+
+
+        self.lstate = Label(self, text = "State")
+        self.lstate.grid(row=8, column=2)
 
         self.state = Entry(self, width=15)
-        self.state.grid(row=8, column=1, sticky=W,pady=5)
+        self.state.grid(row=8, column=3, sticky=W)
         self.state.delete(0, END)
-        self.state.insert(0, "State")
+
+
+        self.lzip = Label(self, text = "Zip Code")
+        self.lzip.grid(row=8, column=4)
 
         self.zip = Entry(self, width=10)
-        self.zip.grid(row=8, column=2, sticky=W,pady=5)
+        self.zip.grid(row=8, column=5, sticky=W)
         self.zip.delete(0, END)
-        self.zip.insert(0, "Zip")
+
+
+        self.lemail = Label(self, text = "Email")
+        self.lemail.grid(row=9, column=0)
 
         self.email = Entry(self, width=20)
-        self.email.grid(row=9, column=0, sticky=W,pady=5)
+        self.email.grid(row=9, column=1, sticky=W)
         self.email.delete(0, END)
-        self.email.insert(0, "Email address")
+        
+
+        self.lphone = Label(self, text = "Phone")
+        self.lphone.grid(row=10, column=0)
 
         self.phone = Entry(self, width=20)
-        self.phone.grid(row=10, column=0, sticky=W,pady=5)
+        self.phone.grid(row=10, column=1, sticky=W)
         self.phone.delete(0, END)
-        self.phone.insert(0, "Phone number")
+        
 
         self.id_box = Entry(self, width=0)
         self.id_box.grid(row=16, column=0, sticky=W)
@@ -266,16 +327,13 @@ class Application(Frame):
         # self.sort_label.grid(row=5,column=3,padx=5,pady=10,stick=E)
         sort = ["Last Name","First Name","Zip Code"]
         self.sort_by = StringVar()
-
-
-        self.sort_by.trace("w",callback=self.sort_contacts)
-        self.sort_option = OptionMenu(self,self.sort_by,*sort)
+        self.sort_by.set("Last Name")
 
         self.sort_by.trace("w",callback=self.sort_contacts)
         self.sort_option = OptionMenu(self,self.sort_by,*sort)
 
 
-        self.sort_option.grid(row=5,column=3,sticky=W)
+        self.sort_option.grid(row=5,column=5)
         # Bottons
         self.search_b = Button(self)
         self.search_b["text"] = "Search",
@@ -315,7 +373,7 @@ class Application(Frame):
 
 
     def create_listbox(self):
-        self.listbox = Listbox(self, width=75)
+        self.listbox = Listbox(self, width=105)
         self.listbox.grid(row=2, column=0, columnspan=10,pady=10,padx=5)
         self.listbox.bind("<Double-Button-1>", self.OnDouble)
 
@@ -367,7 +425,7 @@ class Application(Frame):
 
 if __name__ == "__main__":
     root = Tk()
-    root.geometry("600x550")
+    root.geometry("760x470")
     create_tables()
     BOOK_NAME = tkSimpleDialog.askstring("Addressbook name","Enter addressbook name") #Simple dialog gets book name
     addressbook = create_addressbook(BOOK_NAME)
