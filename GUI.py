@@ -85,13 +85,6 @@ class Application(Frame):
 
 
 
-    def list_content_update(self):
-        a = ["strings"]
-        # a = updated list from the data base "updated one". Each element of the
-        # list should be "name tab tab zip"
-        a = Contact.select() #FIXME: This is not the correct usage of this function
-        self.display_address(self, a)
-
     def delete(self):
 
         try:
@@ -171,7 +164,6 @@ class Application(Frame):
         for i in range (10):
             if value[i].isdigit():
                 super_id += value[i]
-                print super_id
             else:
                 break
 
@@ -208,26 +200,6 @@ class Application(Frame):
         self.id_box.insert(0, super_id)
 
 
-
-    def display_address(self, b, i): #FIXME: What is 'b'??
-        
-        if type(i) == dict:
-            for item in i:
-                if type(item) == str:
-                    self.listbox.insert(END, item)
-                else:
-                    list_output = item.last_name + s + item.zip_code
-                    self.listbox.insert(END, list_output)
-        else:
-            if i.phone != "":
-                i.phone.replace(" ","")
-                phone = "(" + i.phone[0:3] + ")" + " "+ i.phone[3:6] + "-" + i.phone[6:10]
-            else:
-                    phone = ""
-            fmt_str = "{0:<15} {1:<15} {2:<15} {3:<15} {4:<15} {5:<15} {6:<15} {7:<15} {8:<15}".format(str(i.id), i.last_name,i.first_name, i.address, i.city, i.state,i.zip_code, phone, i.email)
-            self.listbox.insert(END, fmt_str)
-        # self.listbox.place(x=1, y=2)
-        # end of list view
     def populate_listbox(self):
         ab = self.addressbook.id
         contacts = Contact.select().where(Contact.ab == ab)
@@ -246,7 +218,7 @@ class Application(Frame):
 
     def createWidgets(self):
         all_contact_instances = Contact.select()
-        print(self.addressbook.id)
+
         # Textbox entry
         self.search = Entry(self, width=30)
         self.search.grid(row=1, column=0, columnspan=2,pady=5)
